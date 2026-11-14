@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/static/src/output.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="h-screen w-screen bg-cyan-300 flex items-center justify-center">
+       <form action="/loginform" method="POST" class="w-[33%] py-[60px] px-[70px] pb-[60px] bg-white border rounded-xl shadow-lg shadow-green-600">
+        <div class="p-[10px] pt-[10px] text-center">
+             <h1 class="text-3xl font-bold text-gray-800 mt-5 pb-[10px]">
+                Welcome Back!
+            </h1>
+             <p class="text-gray-500  text-[18px]">
+                Sign in to continue to your account
+            </p>
+        </div>
+         <div class="w-full flex items-center justify-center gap-3">
+              <hr class="w-[40%] h-[2px] bg-cyan-300">
+              <i class="fa-solid fa-heart-pulse text-cyan-700 text-3xl"></i>
+               <hr class="w-[40%] h-[2px] bg-cyan-300">
+          </div>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category,message in messages %}
+          {% if category =="error" %}
+          <div class=" text-[15px] text-red-500 flex items-center justify-center gap-3  ">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{message}}
+          </div>
+            {% endif %}
+        {% endfor %}
+        {% endwith %}
+         <div class="mt-4 flex items-center gap-3">
+            <i class="fa-solid fa-user text-[20px] text-sky-600"></i>
+            <h3 class="text-[20px] font-serif">Username</h3>
+          </div>
+            <div class="bg-white px-3 py-2.5  border-[2px] border-slate-200 rounded-md mt-2  flex items-center justify-center gap-1 ">
+              <input
+                type="text"
+                name="named"
+                required value="{{request.form.get('named','')}}"
+                class=" w-full outline-none"
+                placeholder=" Enter the username"
+                autocomplete="off"
+              />
+              <div>
+              <i class="fa-solid fa-user text-slate-400 "></i>
+              </div>
+            </div>
+
+       <div class="mt-4 flex items-center gap-3">
+            <i class="fa-solid fa-lock text-[20px] text-sky-600"></i>
+            <h3 class="text-[20px] font-serif">Password</h3>
+          </div>
+          <div class="bg-white mt-2 px-3 py-2.5 border-[2px] border-slate-200 rounded-md flex items-center justify-center gap-1">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password "
+            class="outline-none w-full"
+          /> 
+          <div>
+          <button class="" type="button" id="lock">
+            <i class="fa-solid fa-eye-slash  text-gray-400 "></i>
+          </button>
+          </div>
+          </div>
+  
+        <div class="pt-[30px] pb-[10px] flex items-center justify-between gap-2">
+          
+          <a href="/createnew"
+            class=" w-[45%] py-[10px] px-[5px] bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md flex items-center justify-center font-bold"
+          >
+            Sign Up
+        </a>
+          <button type="submit" class=" w-[45%] bg-blue-900 hover:bg-blue-950 text-white py-[10px] px-[5px] rounded-md flex items-center justify-center font-bold">
+            Sign In
+      </button>
+        </div>
+        <div class=" pt-[10px] pl-[7px]">
+          <a href="{{url_for('forgot')}}" class=" hover:underline decoration-2 underline-offset-2 ">Forgot Password ?</a>
+        </div>
+
+      <div class="pt-[10px]">
+           <p class="text-center text-[15px] text-gray-400 mt-7">
+            <i class="fa-solid fa-shield-halved mr-1"></i>
+            Secure login to your account
+        </p>
+      </div>
+        <!-- Last two div -->
+         </form>
+      </div>
+
+    <script src="{{ url_for('static', filename='project.js') }}"></script>
+</body>
+  </body>
+</html>

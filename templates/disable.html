@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Not Available</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-2">
+
+    <!-- Main Container -->
+    <div class=" max-w-3xl bg-white rounded-2xl shadow-lg border border-blue-100 p-8 md:p-10 text-center">
+
+        <!-- Doctor Icon -->
+        <div class="relative w-[120px] h-[120px] mx-auto mb-5 rounded-full bg-blue-100 flex items-center justify-center">
+
+            <span class="text-7xl">👨‍⚕️</span>
+
+            <div class="absolute -right-2 bottom-3 w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center text-3xl font-bold border-4 border-white">
+                ×
+            </div>
+
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-2xl md:text-3xl font-bold text-blue-950 mb-3">
+            Doctor Not Available Right Now!
+        </h1>
+
+        <p class="text-md text-gray-600 mb-7">
+            We're sorry, the requested doctor is currently unavailable.
+        </p>
+
+        <!-- Reason Box -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-5 flex items-center text-left gap-3">
+
+            <div class="text-3xl text-blue-600">
+                ⓘ
+            </div>
+
+            <div class="border-l-2 border-blue-300 pl-5">
+
+                <h2 class="text-xl font-bold text-blue-950 mb-1">
+                    Reason:
+                </h2>
+
+                {% for i in results %}
+                <p class="text-base md:text-md capitalize text-gray-700">
+                    {{i[1]}}
+                </p>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- Information -->
+        <p class="text-lg text-blue-900 mb-7">
+            ◷ Please try again later or choose another doctor.
+        </p>
+
+        <!-- Back Button -->
+        <a href="{{ url_for('home') }}"
+           class="inline-flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-9 py-4 rounded-xl transition duration-300 shadow-md">
+
+            <span class="text-2xl">←</span>
+            Back to Home
+
+        </a>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en" class="overflow-y-scroll">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile</title>
+     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+</head>
+<body class="m-0 overflow-x-hidden" >
+     <div class="px-7 mt-4">
+      <div class="h-[80px] flex p-[10px]  border shadow-md rounded-full">
+        <div class="w-[20%] flex items-center justify-center gap-3">
+        <i class="fa-solid fa-plus text-[45px] text-blue-600"></i>
+          <div>
+            <h1 class="text-[33px] font-bold">DSP</h1>
+            <h1 class="text-[20px] -mt-3 font-bold text-blue-700">Hospital</h1>
+          </div>
+        </div>
+        <div
+          class="w-[60%] px-[40px] font-semibold flex items-center justify-center gap-[60px]">
+          <a href="/home" class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-house text-[15px]"></i>
+            <h2 class=" text-[17px] hover:underline decoration-2 underline-offset-4 mt-[1px]">Home</h2></a>
+
+          <a href="/finddoctor" class="hover:text-sky-700 flex items-center gap-1">
+            <i class="fa-solid fa-user-doctor text-[17px]"></i>
+            <h2 class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4.5px] ">FindDoctor</h2></a>
+
+          <a href="/show_appointment" class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-calendar-days text-[17px]"></i>
+            <h2 class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4px]">
+              MyAppointment
+            </h2></a>
+
+          <a href="/about" class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-circle-info text-[17px]"></i>
+            <h2 class="hover:underline text-[17px] decoration-2 underline-offset-4 mt-[3px]">About us</h2></a
+          >
+        </div>
+        <div class="w-[20%] flex items-center justify-center gap-4">
+        <div class=" relative p-[6px] shadow-xl border rounded-full">
+            <div class="h-[36px] w-[36px] p-2 bg-blue-500 rounded-full flex items-center justify-center">
+          <i class="fa-solid fa-user text-white text-xl"></i>
+            </div>
+            
+            <div class=" absolute -right-1 bottom-[1px] h-[13px] w-[13px] rounded-full bg-green-500 shadow-lg shadow-green-600 ">
+            </div>
+        </div>
+            <a href="{{url_for('profile')}}" class=" hover:text-blue-800 flex items-center justify-center">
+          <h1 class="hover:underline decoration-2 underline-offset-4 font-semibold text-xl tracking-[px] capitalize ">Hi {{current_user}}</h1>
+          </a>
+        </div>
+      </div>
+      </div>
+
+    <div class="py-5 mt-5 px-5 flex  gap-6">
+        <div class="w-[25%] p-4 rounded-md shadow-lg border-[1px]">
+            <div class="w-fit mx-auto">
+                <div class="h-[150px] w-[150px] p-3 rounded-full bg-blue-50 flex items-center justify-center">
+                    <i class="fa-solid fa-user-tie text-blue-600 text-8xl"></i>
+                </div>
+            </div>
+            <div  class="mt-4 w-fit mx-auto p-2 pb-5 ">
+                <h2 class="font-bold tracking-[2px] text-[22px]">Hello, {{current_user}}</h2>
+                <h2 class="text-blue-600 w-fit mx-auto mt-2 text-xl">Patient</h2>
+            </div>
+            <div class="px-3 py-1">
+            <hr class="w-full h-[3px] bg-slate-500">
+            </div>
+            <div class="py-4 px-2 mt-1">
+                <a href="{{url_for('profile')}}" class="profile  px-4 py-3  w-full flex items-center gap-3 text-white rounded-md bg-blue-500">
+                     <i class="fa-solid fa-user text-xl"></i>
+                    <h2 class="text-[18px]">My profile</h2>
+                </a>
+                <a href="{{url_for('history')}}" class="appointment mt-1 hover:text-white  px-4 py-3  w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-calendar-days text-xl"></i>
+                    <h2 class=" text-[18px]">Appointment History</h2>
+                </a>
+                <a href="{{url_for('passwords')}}" class="password mt-1 px-4 py-3  hover:text-white w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-lock text-xl"></i>
+                    <h2 class="text-[18px]">Change password</h2>
+                </a>
+                <a href="{{url_for('logout')}}" class="logout mt-1 hover:text-white  px-4 py-3  w-full flex items-center gap-3 hover:bg-blue-500 hover:rounded-md ">
+                    <i class="fa-solid fa-right-from-bracket text-xl"></i>
+                    <h2 class="text-[18px]">Logout</h2>
+                </a>
+            </div>
+        </div>
+        <div class="w-[80%] px-[10px]">
+            <div class=" border rounded-md p-4 px-6 shadow-lg bg-gradient-to-r from-[#2563EB] via-[#BFDBFE] to-[#EFF6FF] flex items-center justify-between"> 
+                <div class=" text-white">
+                    <h1 class="font-bold font-serif text-4xl">My profile</h1>
+                    <h1 class="mt-1 font-semibold font-serif text-md">Manage your personal information </h1>
+                </div>
+                <i class="fa-solid fa-heart-pulse text-8xl text-blue-300"></i>
+            </div>
+
+            <div class="profile_box rounded-md shadow-lg mt-10 px-6 py-12 flex gap-3 border">
+                <!-- box-1 -->
+                <div class="w-[30%] p-4 relative border-r-[3px]">
+                <div class="w-fit mx-auto">
+                <div class="h-[150px] w-[150px] p-3 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-blue-800 text-8xl"></i>
+                </div>
+            </div>
+            <div class="absolute right-10 bottom-6 p-1 rounded-full bg-white">
+            <div class="h-[40px] w-[40px] p-2 bg-blue-600 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-camera text-[18px] text-white"></i>
+            </div>
+            </div>
+                </div>
+                <!-- box-1 end -->
+                 <!-- box2 -->
+            <div class="w-[50%] p-4 flex">
+                <div>
+                    <div class="mt-2 flex items-center gap-3">
+                        <i class="fa-solid fa-user-tie text-blue-700 text-[17px]"></i>
+                        <h2 class=" font-serif text-[17px]">Full Name</h2>
+                    </div>
+                    <div class="mt-3 flex items-center text-[17px] gap-3">
+                       <i class="fa-solid fa-envelope text-blue-700 text-[17px]"></i>
+                        <h2 class=" font-serif text-[17px]">Email Address</h2>
+                    </div>
+                    <div class="mt-3 flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-blue-700 text-[17px]"></i>
+                        <h2 class=" font-serif text-[17px]">Phone Number</h2>
+                    </div>
+                    <div class="mt-3 flex items-center gap-4">
+                        <i class="fa-solid fa-user text-blue-700 text-[17px]"></i>
+                        <h2 class=" font-serif text-[17px]">Username</h2>
+                    </div>
+                </div>
+                {% for i in results %}
+                <div class="ml-6 font-bold ">
+                    <div class="mt-3 flex items-center gap-3">
+                        <h2 class=" font-serif text-[15px]"><i>{{i[2]}}</i></h2>
+                    </div>
+                    <div class="mt-3.5 flex items-center gap-3">
+                        <h2 class=" font-serif text-[15px]"><i>{{i[5]}}</i></h2>
+                    </div>
+                    <div class="mt-3.5 flex items-center gap-3">
+                        <h2 class="text-[15px]"><i>{{i[4]}}</i></h2>
+                    </div>
+                    <div class="mt-3.5 flex items-center gap-4">
+                        <h2 class=" font-serif text-[15px]">{{i[1]}}</h2>
+                    </div>
+                </div>
+                {% endfor %} 
+            </div>
+            <div class="w-[20%] p-4 mt-4 ">
+                <a href="" class="px-9 py-3 bg-blue-700 rounded-md hover:bg-blue-900 text-white font-bold">
+                    EDIT
+                </a>
+            </div>
+            </div>    
+            </div>
+        </div>
+    <div class="h-5 w-full"></div>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+  </head>
+  <body class="m-0">
+    <div class="  min-h-screen w-full ">
+      <form
+        class="px-[100px] pt-[100px] pb-[200px]  rounded-md border-2 shadow-2xl shadow-sky-200"
+        action="/fillform"
+        method="POST"
+        enctype="multipart/form-data">
+        <h1 class="font-bold font-serif text-center text-[25px] leading-6">
+          Fill the form
+        </h1>
+        <div class="mt-2 flex items-center justify-center gap-3">
+          <span class="w-16 h-[1.5px] bg-sky-500"></span>
+
+          <i class="fa-solid fa-heart-pulse text-sky-600 text-xl"></i>
+
+          <span class="w-16 h-[1.5px] bg-sky-500"></span>
+        </div>
+
+        <div class="py-4 mt-4 flex  gap-4">
+          {% for i in results %}
+
+          <!--  hidden  input  -->
+          <input type="hidden" name="doctor_id" id="doctor" value="{{i[1]}}">
+
+          <div class="shadow-md rounded-md py-2 w-[20%] px-5 border flex items-center gap-4">
+            <div
+              class="h-[50px] w-[50px] bg-sky-100 rounded-full flex items-center justify-center"
+            >
+              <i class="fa-solid fa-user-doctor text-2xl text-sky-600"></i>
+            </div>
+            <div>
+              <p class="text-slate-500 text-[13px]">DOCTOR</p>
+              <h4 class="font-semibold capitalize font-serif">Dr.{{i[2]}}</h4>
+            </div>
+          </div>
+
+          <div class="shadow-md rounded-md py-2 px-5 w-[30%] border flex items-center gap-3">
+            <div
+              class="h-[50px] w-[50px] bg-sky-100 rounded-full flex items-center justify-center"
+            >
+              <i class="fa-solid fa-calendar-days text-2xl text-sky-600"></i>
+            </div>
+            <div class="p-2.5">
+              <p class="text-slate-500 text-[13px]">AVAILABLE Date</p>
+              <h3 class="font-semibold capitalize font-serif">{{i[7]}},{{i[8]}}</h3>
+            </div>
+          </div>
+
+          <div class="shadow-md rounded-md py-2 px-5 w-[30%] border flex items-center gap-3">
+            <div
+              class="h-[50px] w-[50px] bg-sky-100 rounded-full flex items-center justify-center"
+            >
+              <i class="fa-solid fa-calendar-days text-2xl text-sky-600"></i>
+            </div>
+            <div class="p-2.5">
+              <p class="text-slate-500 text-[13px]">AVAILABLE Days</p>
+              <h3 class="font-semibold capitalize font-serif">{{i[3]}},{{i[4]}},{{i[5]}}</h3>
+            </div>
+          </div>
+
+          <div class="w-[20%] shadow-md rounded-md py-2 px-5 border flex items-center gap-3">
+            <div
+              class="h-[50px] w-[50px] bg-sky-50 rounded-full flex items-center justify-center"
+            >
+              <i class="fa-solid fa-clock text-2xl text-sky-600"></i>
+            </div>
+            <div>
+              <p class="text-slate-500 text-[13px]">AVAILABLE Time</p>
+              <h3 class="font-semibold font-serif text-[16px]">{{i[6]}}</h3>
+            </div>
+          </div>
+
+          {% endfor %}
+
+        </div>
+
+        <div class=" shadow-lg rounded-md px-14 pt-8 pb-14 mt-4 border-[2px]">
+           {% with messages = get_flashed_messages(with_categories=true) %}
+             {% for category, message in messages %}
+               {% if category == 'error' %}
+                   <div class="py-6 text-center text-xl font-bold text-red-600 flex items-center justify-center gap-2">
+                    <h2>*****</h2>
+                     {{ message }}
+                    <h2>*****</h2>
+                   </div>
+               {% endif %}
+             {% endfor %}
+        {% endwith %}
+        <div class="mt-8 flex gap-5">
+          <div class=" w-[50%] pr-10">
+          <div class=" pr-5 ">
+          <div class="flex items-center gap-4">
+            <div
+              class="bg-sky-600 h-[25px] w-[25px] rounded-full text-white font-semibold flex items-center justify-center"
+            >
+              <h1>1</h1>
+            </div>
+            <h1 class="font-bold font-serif text-[19px]">Personal Information</h1>
+          </div>
+          <div class="mt-3 ml-[40px] flex items-center gap-3">
+            <i class="fa-solid fa-user text-sky-600"></i>
+            <h3 class="text-[16px]">Full Name</h3>
+          </div>
+          <div class="mt-2 ml-[40px] bg-sky-600 rounded-md border-[2px] pl-[4px]">
+            <div class="bg-white pr-2 flex items-center justify-cente gap-2">
+              <input
+                type="text"
+                name="named"
+                class="text-black p-2 bg-white w-full outline-none"
+                placeholder=" Enter the full name"
+                required value="{{request.form.get('named','')}}"
+                autocomplete="off"
+              />
+              <div class="">
+              <i class="fa-solid fa-user text-slate-500"></i>
+              </div>
+              </div>
+          </div>
+          </div>
+
+          <div class="mt-14">
+            <div class="flex items-center gap-4">
+            <div
+              class="bg-sky-600 h-[25px] w-[25px] rounded-full text-white font-semibold flex items-center justify-center"
+            >
+              <h1>3</h1>
+            </div>
+            <h1 class="font-bold font-serif text-[18px]">Day Selection</h1>
+          </div>
+           <div class="ml-[20px] mt-3  px-[20px]">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-calendar-day text-blue-600"></i>
+                <h3 class="mt-1 font-serif">Day</h3>
+              </div>
+
+              <select
+                name="day"
+                id="day"
+                class="text-[15px] w-full rounded-[10px] p-2 mt-3 outline-none border-[2px]">
+              {% for i in results %}
+                <option value="">Select Day</option>
+                <option value="{{i[3]}}">{{i[3]}}</option>
+                <option value="{{i[4]}}">{{i[4]}}</option>
+                <option value="{{i[5]}}">{{i[5]}}</option>
+              {% endfor %}
+              </select>
+            </div>
+          </div>
+          </div>
+
+          <!-- image container -->
+           <div class="pl-8"> 
+            <div class="flex items-center gap-4">
+            <div
+              class="bg-sky-600 h-[25px] w-[25px] rounded-full text-white font-semibold flex items-center justify-center"
+            >
+              <h1>2</h1>
+            </div>
+            <h1 class="font-bold font-serif text-[19px]"> Select QR Screenshot</h1>
+          </div>
+
+          
+          <img id="preview"  alt="" class=" border-none mt-6 ml-10 h-[200px] w-full object-cover object-top hidden"  onerror="this.style.display ='none' ">
+          <input type="file" name="image" class="hidden border ml-[40px] mt-4" id="imageinput" accept="image/*" id=""
+          onchange="if (this.files.length>0){
+            preview.style.display ='block'
+            preview.src = URL.createObjectURL(this.files[0])
+          }"
+          >
+          <label for="imageinput"
+          class="ml-[40px] mt-4 cursor-pointer inline-block bg-gray-200 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300">
+          Choose picture </label>
+
+           </div>
+
+        </div>
+
+        <div class="mt-14 pr-6">
+          <div class="flex items-center gap-4">
+            <div
+              class="bg-sky-600 h-[25px] w-[25px] rounded-full text-white font-semibold flex items-center justify-center"
+            >
+              <h1>4</h1>
+            </div>
+            <h1 class="font-bold font-serif text-[19px]">Address Information</h1>
+          </div>
+
+          <div class="mt-3 ml-[40px] grid md:grid-cols-3 gap-8">
+            <div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-city text-green-600"></i>
+                <h3 class="mt-1 font-serif">District</h3>
+              </div>
+              <select
+                name="district"
+                id="district"
+                class="p-2 mt-3 w-full text-[15px] rounded-[10px] outline-none border-[2px]"
+              >
+                <option value="">Select District</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-city text-sky-600"></i>
+                <h3 class="mt-1 font-serif">Municipality</h3>
+              </div>
+
+              <select
+                name="Municipality"
+                id="vdc"
+                class="text-[15px] w-full rounded-[10px] p-2 mt-3 outline-none border-[2px]"
+              >
+                <option value="">Select VDC/Municipality</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-users text-green-600"></i>
+                <h3 class="mt-1 font-serif">Ward</h3>
+              </div>
+              <select
+                name="ward"
+                id="ward"
+                class="text-[15px] rounded-[10px] w-full p-2 mt-3 outline-none border-[2px]"
+              >
+                <option value="">Select ward</option>
+                <option value="word-1">word-1</option>
+                <option value="word-2">word-2</option>
+                <option value="word-3">word-3</option>
+                <option value="word-4">word-4</option>
+                <option value="word-5">word-5</option>
+                <option value="word-6">word-6</option>
+                <option value="word-7">word-7</option>
+                <option value="word-8">word-8</option>
+                <option value="word-9">word-9</option>
+                <option value="word-10">word-10</option>
+                <option value="word-11">word-11</option>
+                <option value="word-12">word-12</option>
+                <option value="word-13">word-13</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-14 pr-6">
+          <div class="flex items-center gap-4">
+            <div
+              class="bg-sky-600 h-[25px] w-[25px] rounded-full text-white font-semibold flex items-center justify-center"
+            >
+              <h1>5</h1>
+            </div>
+            <h1 class="font-bold font-serif text-[19px]">Contact Information</h1>
+          </div>
+          <div class="ml-[40px] grid grid-cols-2 md:grid-cols-2 gap-[90px]">
+            <div class="mt-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-phone text-red-500"></i>
+                <h3 class="mt-1 font-serif">Phone</h3>
+              </div>
+              <input
+                type="text"
+                name="phone"
+                placeholder="Enter the Number"
+                required value="{{request.form.get('phone','')}}"
+                autocomplete="off"
+                class="mt-2 py-2 px-3 w-full border-[2px] rounded-md outline-none"
+              />
+            </div>
+
+            <div class="mt-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-envelope mt-1 text-red-400"></i>
+                <h3 class="mt-1 font-serif">Gmail\emali</h3>
+              </div>
+              <input
+                type="text"
+                name="email"
+                placeholder="Enter the Gmail"
+                required value="{{request.form.get('email','')}}"
+                autocomplete="off"
+                class="mt-2 p-2 w-full border-[2px] rounded-md outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center gap-4 border border-red-200 bg-red-50/70 rounded-xl px-5 py-4 mt-12"
+        >
+          <div
+            class="h-12 w-12 flex items-center justify-center bg-white rounded-full shrink-0"
+          >
+            <i class="fa-solid fa-shield-halved text-3xl text-red-600"></i>
+          </div>
+
+          <div class="flex-1">
+            <h3 class="font-bold text-gray-800 text-base">
+              Your Information is Safe
+            </h3>
+
+            <p class="text-sm text-gray-600 mt-1">
+              We respect your privacy. Your details will only be used for
+              appointment purposes.
+            </p>
+          </div>
+          <i
+            class="fa-solid fa-shield-halved text-4xl text-red-200 hidden sm:block"
+          ></i>
+        </div>
+
+        <div class="mt-11 flex items-center justify-center gap-4">
+          <button
+            type="submit"
+            class=" flex items-center justify-center gap-4 bg-sky-600 hover:bg-sky-700 text-white font-bold  text-[18px] px-8 py-3.5 rounded-xl shadow-md shadow-sky-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            Submit Appointment
+            <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-2"></i>
+          </button>
+        </div>
+        </div>
+      </form>
+    </div>
+    <script src="{{ url_for('static', filename='country.js') }}">
+
+    </script>
+  </body>
+</html>

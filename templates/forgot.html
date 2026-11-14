@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+         <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+</head>
+<body>
+     <div class="h-screen w-screen bg-cyan-300 flex items-center justify-center">
+       <form action="/newpassword" method="POST" class="w-[33%] py-[20px] px-[60px]  pb-[60px] bg-white border rounded-xl shadow-lg shadow-green-600">
+
+         <div class="p-[10px] pt-[10px] text-center">
+          <div class="w-full flex items-center justify-center gap-3">
+            <div class="p-2 bg-slate-100 rounded-full ">
+           <div class="flex items-center justify-center rounded-full h-[75px] w-[75px] shadow-xl shadow-cyan-200 bg-cyan-300 p-2">
+            <i class="fa-solid fa-shield-halved text-[50px] text-cyan-900"></i>
+          </div>
+            </div>
+          </div>
+             <h1 class="text-3xl font-bold text-gray-800 mt-5 pb-[10px]">
+                Change Password
+            </h1>
+           
+            <div class="w-full flex items-center justify-center gap-3">
+              <hr class="w-[30%] h-[2px] bg-cyan-300">
+              <i class="fa-solid fa-heart-pulse text-cyan-700 text-3xl"></i>
+               <hr class="w-[30%] h-[2px] bg-cyan-300">
+            </div>
+
+             {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category,message in messages %}
+          {% if category =="error" %}
+          <div class=" text-[15px] text-red-500 flex items-center justify-center gap-3  ">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{message}}
+          </div>
+          {% endif %}
+          {% endfor %}
+          {% endwith %}
+    
+            <div class="mt-6 flex items-center gap-3">
+            <i class="fa-solid fa-phone text-sky-600"></i>
+            <h3 class="text-[16px]">Phone Number</h3>
+          </div>
+            <div class="bg-white px-3 py-2 border-[2px] border-slate-200 rounded-md mt-2  flex items-center justify-center gap-1 {{ 'border-red-300' if feild_e=='username' else  'border-slate-200' }}">
+              <input
+                type="text"
+                name="phone"
+                required value="{{request.form.get('phone','')}}"
+                class="   text-black bg-white w-full outline-none"
+                placeholder=" Enter the phone number"
+                autocomplete="off"
+              />
+              <div>
+              <i class="fa-solid fa-phone text-slate-400 "></i>
+              </div>
+            </div>
+            
+            
+          <div class="mt-6 flex items-center gap-3">
+            <i class="fa-solid fa-lock text-sky-600"></i>
+            <h3 class="text-[16px]">New Password</h3>
+          </div>
+            <div class= "bg-white mt-2 py-2 px-3 border-[2px] border-slate-200 rounded-md flex items-center justify-center gap-1 ">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required value="{{request.form.get('password','')}}"
+                class="text-black  bg-white w-full outline-none"
+                placeholder="Enter New password"
+                autocomplete="off" /> 
+                <div>   
+               <button class="" type="button" id="lock">
+                <i class="fa-solid fa-eye-slash  text-gray-400 "></i>
+                </button>
+              </div>
+            </div>
+              <div class="flex items-center justify-center">
+            <button class="mt-12 px-8 py-4 rounded-2xl bg-red-600 hover:bg-red-700 shadow-2xl text-white font-bold flex items-center justify-center gap-3"><i class="fa-solid fa-user-shield"></i> <span>Create New password</span> <i class="fa-solid fa-arrow-right mt-1"></i> </button>
+        </div>
+
+       </form>
+     </div>
+
+     <script>
+        const locked = document.querySelector("#lock");
+const passowrd = document.querySelector("#password");
+const icon = locked.querySelector("i");
+
+locked.addEventListener("click", () => {
+  if (passowrd.type == "password") {
+    passowrd.type = "text";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  } else {
+    passowrd.type = "password";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  }
+});
+     </script>
+      
+</body>
+</html>

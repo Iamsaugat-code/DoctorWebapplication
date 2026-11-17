@@ -8,7 +8,6 @@ import re
 app = Flask(__name__)
 app.secret_key ="mykey123@"
 
-
 @app.after_request
 def no_cache(response):
     response.headers["Cache-Control"] ="no-store"

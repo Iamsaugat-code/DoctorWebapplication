@@ -91,10 +91,10 @@
            {% with messages = get_flashed_messages(with_categories=true) %}
              {% for category, message in messages %}
                {% if category == 'error' %}
-                   <div class="py-6 text-center text-xl font-bold text-red-600 flex items-center justify-center gap-2">
-                    <h2>*****</h2>
+                   <div class="py-6 text-center text-md font-bold text-red-600 flex items-center justify-center gap-2">
+                    <h2>****</h2>
                      {{ message }}
-                    <h2>*****</h2>
+                    <h2>****</h2>
                    </div>
                {% endif %}
              {% endfor %}
@@ -149,12 +149,13 @@
               <select
                 name="day"
                 id="day"
+                data-select="{{ request.form.get('day', '') }}"
                 class="text-[15px] w-full rounded-[10px] p-2 mt-3 outline-none border-[2px]">
               {% for i in results %}
                 <option value="">Select Day</option>
-                <option value="{{i[3]}}">{{i[3]}}</option>
-                <option value="{{i[4]}}">{{i[4]}}</option>
-                <option value="{{i[5]}}">{{i[5]}}</option>
+                <option value="{{i[3]}}" {% if request.form.get('day') == i[3] %} selected {% endif %}>{{i[3]}}</option>
+                <option value="{{i[4]}}" {% if request.form.get('day') == i[4] %}  selected {% endif %} >{{i[4]}}</option>
+                <option value="{{i[5]}}" {% if request.form.get('day') == i[5] %}  selected {% endif %}  >{{i[5]}}</option>
               {% endfor %}
               </select>
             </div>
@@ -207,6 +208,7 @@
               <select
                 name="district"
                 id="district"
+                data-selected="{{ request.form.get('district', '') }}"
                 class="p-2 mt-3 w-full text-[15px] rounded-[10px] outline-none border-[2px]"
               >
                 <option value="">Select District</option>
@@ -222,6 +224,7 @@
               <select
                 name="Municipality"
                 id="vdc"
+                data-selected=" {{ request.form.get('Municipality','') }} "
                 class="text-[15px] w-full rounded-[10px] p-2 mt-3 outline-none border-[2px]"
               >
                 <option value="">Select VDC/Municipality</option>
@@ -238,20 +241,10 @@
                 id="ward"
                 class="text-[15px] rounded-[10px] w-full p-2 mt-3 outline-none border-[2px]"
               >
-                <option value="">Select ward</option>
-                <option value="word-1">word-1</option>
-                <option value="word-2">word-2</option>
-                <option value="word-3">word-3</option>
-                <option value="word-4">word-4</option>
-                <option value="word-5">word-5</option>
-                <option value="word-6">word-6</option>
-                <option value="word-7">word-7</option>
-                <option value="word-8">word-8</option>
-                <option value="word-9">word-9</option>
-                <option value="word-10">word-10</option>
-                <option value="word-11">word-11</option>
-                <option value="word-12">word-12</option>
-                <option value="word-13">word-13</option>
+              <option value="">Select ward</option>
+              {% for num in ['01','02','03','04','05','06','07','08','09','10','11','12','13','14'] %}
+                <option value="{{num}}" {% if request.form.get('ward') == num %} selected {% endif %} >word-{{num}}</option>
+              {%  endfor %}
               </select>
             </div>
           </div>
@@ -275,8 +268,11 @@
               <input
                 type="text"
                 name="phone"
-                placeholder="Enter the Number"
+                placeholder="Enter the phone number "
                 required value="{{request.form.get('phone','')}}"
+                pattern="9[78][0-9]{8}"
+                maxlength="10"
+                oninput="this.value = this.value.replace(/[^0-9]/g,'')"
                 autocomplete="off"
                 class="mt-2 py-2 px-3 w-full border-[2px] rounded-md outline-none"
               />

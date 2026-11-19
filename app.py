@@ -519,6 +519,8 @@ def take_appointment(doctor_id):
 # image relate worked
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024*1024
 
+
+
 # booking appointment or fill form
 @app.route("/fillform",methods=["POST","GET"])
 def fillforms(): 
@@ -576,13 +578,23 @@ def fillforms():
                 flash("Please fill all fields", "error")
                 return render_template("book.html",doctor_id=doctor_id,results=data2)
             
-            if not re.fullmatch(r"[0-9]{10}",phone):
+            
+            if not re.fullmatch(r"9[78][0-9]{8}",phone):
                 flash("Enter a valid 10 digit phone number", "error")
                 return render_template("book.html",doctor_id=doctor_id,results=data2)
         
             if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
                 flash("Enter a valid email address", "error")
                 return render_template("book.html",doctor_id=doctor_id,results=data2)
+            
+            cursor.execute("select count(*) from book_appointment where  (doctor_name =%s and day_name = %s) and status = %s",(doctor_name,day,status))
+            
+            book_seat = cursor.fetchone()[0]
+            
+            if book_seat == 8 :
+                flash(f"Sorry! All 8 appointment slots for this {day} are already booked. Please select another day. Thank you for your understanding!","error")
+                return render_template("book.html",doctor_id=doctor_id,results=data2)
+
             
             cursor.execute("SELECT 1 FROM book_appointment WHERE doctor_name = %s AND phone = %s AND day_name = %s AND booking_time >= NOW() - INTERVAL 24 HOUR  LIMIT 1",(doctor_name,phone,day))
             if cursor.fetchone():
@@ -595,9 +607,7 @@ def fillforms():
             cursor.execute("INSERT INTO book_appointment  (doctor_name,specailist,fullname,address,phone,gmail,day_name,image,status,username,payment_s) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",(doctor_name,doctor_specialist,fullname,fulladdress,phone,email,day,img,status,username,payment))
             con.commit() 
             
-            return redirect(url_for("booked"))
-                    
-        return render_template("book.html",results=data2)
+            return redirect(url_for("booked"))                   
     
     except mysql.connector.Error as e:
         flash("unable to connect the database","error")
@@ -607,6 +617,9 @@ def fillforms():
     finally:
         cursor.close()
         con.close()
+        
+    return render_template("book.html",results=data2)
+    
 
 # imaged last part
 @app.route("/pic")
@@ -687,7 +700,7 @@ def searched_A():
         pattern ="%"+input+"%"
     
   
-        cursor.execute("select * from book_appointment where doctor_name like %s or fullname like %s ",    (pattern,pattern))
+        cursor.execute("select * from book_appointment where (doctor_name like %s or fullname like %s) and TIMESTAMP(booking_data, booking_time) BETWEEN NOW() - INTERVAL 24 HOUR AND NOW() ",    (pattern,pattern))
         data = cursor.fetchall()
         cursor.close()
         con.close()
@@ -770,7 +783,7 @@ def ordering():
     if select_value not in order:
             return redirect(url_for("show_Appoint"))
     try:
-        cursor.execute(f"select * from book_appointment order by {order[select_value]};")
+        cursor.execute(f"select * from book_appointment where TIMESTAMP(booking_data, booking_time) BETWEEN NOW() - INTERVAL 24 HOUR AND NOW() order by {order[select_value]}")
         data = cursor.fetchall()
     finally:
         cursor.close()

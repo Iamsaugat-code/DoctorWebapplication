@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>about</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+  </head>
+  <body>
+    <!-- Navigation bar -->
+     <div class="px-7 mt-4">
+      <div class="h-[80px] flex p-[10px] border-none shadow-md rounded-full">
+        <div class="w-[20%] flex items-center justify-center gap-3">
+          <i class="fa-solid fa-plus text-[45px] text-blue-600"></i>
+          <div>
+            <h1 class="text-[33px] font-bold">DSP</h1>
+            <h1 class="text-[20px] -mt-3 font-bold text-blue-700">Hospital</h1>
+          </div>
+        </div>
+        <div class="w-[60%] px-[40px] font-semibold flex items-center justify-center gap-[60px]">
+          <a href="{{url_for('fhome')}}" class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-house text-[15px]"></i>
+            <h2 class="text-[17px] hover:underline decoration-2 underline-offset-4 mt-[1px]">
+              Home
+            </h2></a>
+
+          <a
+            href="{{url_for('f_finddoctor')}}"
+            class="hover:text-sky-700 flex items-center gap-1">
+            <i class="fa-solid fa-user-doctor text-[17px]"></i>
+            <h2
+              class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4.5px]">
+              FindDoctor
+            </h2></a>
+          <a
+            href="{{url_for('f_myappointment')}}"
+            class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-calendar-days text-[17px]"></i>
+            <h2 class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4px]">
+              MyAppointment
+            </h2></a>
+          <a href="{{url_for('f_about')}}" class="text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-circle-info text-[17px]"></i>
+            <h2
+              class="underline text-[17px] decoration-2 underline-offset-4 mt-[3px]">
+              About us
+            </h2></a>
+        </div>
+       <div class="w-[20%] flex items-center justify-center gap-4">
+        <a href="{{url_for('login')}}" class=" font-bold px-4 py-2 hover:shadow-2xl hover:text-md border-slate-200 border-[2px] rounded-md">
+            Sign in
+        </a>
+         <a href="{{url_for('create_new')}}" class=" font-bold px-4 py-2 border-slate-200 border-[2px] rounded-md bg-blue-600 text-white hover:bg-blue-700">
+            Sign Up
+        </a>
+        
+        </div>
+
+      </div>
+    </div>
+
+    <!--  hero section 1 -->
+    <section class="px-8 py-14 ">
+      <div class="text-center">
+        <h2 class="font-bold text-[30px] uppercase tracking-[5px]">About</h2>
+        <h2 class="font-bold text-[40px] text-blue-600 uppercase tracking-[5px]">
+          DSP Hospital
+        </h2>
+        <h2 class="mt-2 font-bold text-[15px] uppercase tracking-[4px]">
+          established : 2060-01-12 bs.
+        </h2>
+      </div>
+    </section>
+
+    <section class="px-[80px] pt-5 ">
+      <div class="p-4 flex">
+        <div class="flex items-center w-[50%]">
+            <img src="/static/Image/girls.png" class="object-cover border rounded-xl object-center h-[300px] w-[500px]" alt="">
+        </div>
+        <div class="w-[50%]">
+            <h2 class="font-semibold text-[25px] text-blue-800 tracking-[2px]">DSP Hospital</h2>
+            <p class="mt-2 leading-8">
+                DSP Hospital is committed to providing quality healthcare with compassion, care, and dedication. Our experienced medical professionals and modern healthcare facilities ensure that every patient receives the attention and treatment they deserve. From routine checkups to specialized medical services, we put your health and well-being first. At DSP Hospital, your health is our priority, and your trust is our greatest strength
+            </p>
+            <p class=" leading-8 mt-2">Experience trusted healthcare where advanced treatment meets compassionate care, because every life deserves the best.</p>
+        </div>
+    </section>
+
+    <section class="px-[80px] pt-5">
+        <div class="p-4 flex items-center gap-3">
+            <div class="w-[50%] p-6 bg-blue-50 rounded-xl flex justify-center gap-8">
+                <i class="fa-solid fa-bullseye text-blue-800 text-[65px]" ></i>
+                <div>
+                    <h2 class="font-bold text-blue-800 text-[20px]">Our Mission</h2>
+                    <p>Our mission is to provide high-quality, affordable, and compassionate healthcare to everyone.</p>
+                </div>
+            </div>
+            <div class="w-[50%] p-6 bg-blue-50 rounded-xl flex justify-center gap-8">
+                <i class="fa-solid fa-eye text-blue-800 text-[65px]" ></i>
+                <div>
+                    <h2 class="font-bold text-blue-800 text-[20px]">Our vision</h2>
+                    <p>Our vision is to become a trusted healthcare institution known for excellence, innovation, and compassionate care.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="px-[80px] pt-5">
+      <div class="p-4 flex items-center gap-[60px]">
+        <div class="w-[40%] p-2">
+          <div class=" flex items-center  gap-4">
+            <i class="fa-solid fa-star text-blue-800 text-2xl"></i>
+            <h2 class="font-bold text-[17px] text-blue-800"> why choose us ?</h2>
+          </div>
+          <h1 class="font-bold text-[25px] text-blue-800">Your health, Our priority</h1>
+          <h2 class="mt-2 font-semibold  leading-8">🩺 Experienced Medical Professionals</h2>
+          <h2 class="font-semibold  leading-8">❤️ Compassionate Patient Care </h2>
+          <h2 class="font-semibold  leading-8">🏥 Modern Medical Facilities</h2>
+          <h2 class="font-semibold  leading-8">⏰ 24/7 Emergency Services</h2>
+          <h2 class="font-semibold  leading-8">💊 Affordable Healthcare Services</h2>
+        </div>
+<div class="ml-12 flex items-center w-[50%]">
+            <img src="/static/Image/d.png" class="object-cover border rounded-xl object-center h-[270px] w-[600px]" alt="">
+        </div>
+
+      </div>
+    </section>
+   {% include 'footer.html' %}
+  </body>
+</html>

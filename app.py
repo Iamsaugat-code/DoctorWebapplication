@@ -33,8 +33,59 @@ def user_detect():
         return {"current_user":"none"}
     return {"current_user":data[2],"username":username}
 
+# this is relate to the none user page 
+# front Home 
+@app.route("/")
+def fhome():
+    return render_template("fhome.html")
+
+@app.route("/ffinddoctr",methods = ["GET","POST"])
+def f_finddoctor():
+    con = mysql.connector.connect(
+               host ='localhost',
+               user='root',
+               password ='password',
+               database ='doctorapplication'
+        )
+    cursor = con.cursor()
+    cursor.execute("select * from doctorlist;")
+    data = cursor.fetchall()
+    cursor.close()
+    con.close()
+    
+    doctorlist =[]
+    for i in data:
+        img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+        doctorlist.append({
+            'id':i[0],
+            'image':img,
+            'name':i[2],
+            'specalist':i[3],
+            'year':i[4],
+            'rating':i[5],
+            'fees':i[6],
+            'status':i[7]
+        }) 
+    
+    return render_template('ffindoctor.html',results=doctorlist)
+
+@app.route("/fmyappoint",methods =["GET","POST"])
+def f_myappointment():
+    return render_template("fmyappoint.html")
+
+@app.route("/abouts")
+def f_about():
+    return render_template("fabout.html")    
+
+@app.route("/gotologin")
+def gotologin():
+    return render_template("notallowed.html")
+
+
+#  upto here
+
 # login page
-@app.route("/",methods=["GET"])
+@app.route("/login",methods=["GET"])
 def login():
     if "username" in session:
         return redirect(url_for("home"))
@@ -45,7 +96,7 @@ def login():
 @app.route("/home",methods=["GET"])
 def home():
     if "username" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     
     return render_template("Home.html")
 
@@ -53,7 +104,7 @@ def home():
 @app.route("/about",methods=["GET"])
 def aboutus():
     if "username" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     return render_template("about.html")
 
 
@@ -119,14 +170,14 @@ def newpassword():
 @app.route("/password",methods=["GET"])
 def passwords():
     if "username" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     return render_template("password.html")
 
 # appointment history
 @app.route("/history",methods=["GET","POST"])
 def history():
     if 'username' not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     con = mysql.connector.connect(
                                host ='localhost',
                                user='root',
@@ -213,7 +264,7 @@ def profile():
 @app.route("/passwordchanged",methods=["GET","POST"])
 def password_changed():
     if "username" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     
     con = mysql.connector.connect(
                        host ='localhost',
@@ -263,7 +314,7 @@ def password_changed():
 @app.route("/logout",methods=["GET"])
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("fhome"))
     
     
 
@@ -453,7 +504,7 @@ def searchedData():
 @app.route("/finddoctor",methods =["GET"])
 def show():
     if "username" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     con = mysql.connector.connect(
            host ='localhost',
            user='root',
@@ -485,6 +536,8 @@ def show():
 # not available
 @app.route("/disable/<int:doctor_id>")
 def disable(doctor_id):
+    if "username" not in session:
+        return redirect(url_for("gotologin`"))
     con = mysql.connector.connect(
                host ='localhost',
                user='root',
@@ -501,6 +554,8 @@ def disable(doctor_id):
 
 @app.route("/booked/<int:doctor_id>")
 def take_appointment(doctor_id):
+    if "username" not in session:
+        return redirect(url_for("gotologin"))
     con = mysql.connector.connect(
            host ='localhost',
            user='root',
@@ -519,13 +574,10 @@ def take_appointment(doctor_id):
 # image relate worked
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024*1024
 
-
-
 # booking appointment or fill form
 @app.route("/fillform",methods=["POST","GET"])
 def fillforms(): 
-    if "username" not in session:
-        return redirect(url_for("login"))
+    
     doctor_id = request.values.get("doctor_id", "").strip()   # works for GET and POST
     con = get_connection()
     cursor = con.cursor()
@@ -619,27 +671,7 @@ def fillforms():
         con.close()
         
     return render_template("book.html",results=data2)
-    
-
-# imaged last part
-@app.route("/pic")
-def picture():
-    con = mysql.connector.connect(
-               host ='localhost',
-               user='root',
-               password ='password',
-               database ='doctorapplication'
-        )
-    cursor = con.cursor()
-    username = session.get("username")
-    cursor.execute("select * from payments where username =%s order by pay_id desc",(username,))
-    data = cursor.fetchone()
-    
-    if not data or data[2] or data[3]:
-        flash("no data is available ","error")
-    
-    return Response(data[2],mimetype=data[3])
-    
+        
 
 @app.route("/booked_s",methods =["GET"])
 def booked():
@@ -650,7 +682,7 @@ def booked():
 @app.route("/show_appointment",methods=["GET"])
 def show_Appoint():
     if "username" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("fhome"))
     con = mysql.connector.connect(
            host ='localhost',
            user='root',
@@ -765,7 +797,8 @@ def datachange(row):
 
 @app.route("/order",methods =["GET","POST"])
 def ordering():
-    print("ordering route is running")
+    if 'username' not in session:
+        return redirect(url_for('f_myappointment'))
     con = mysql.connector.connect(
                 host ='localhost',
                 user='root',

@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en" class="overflow-y-scroll">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindDoctor</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+</head>
+<body class="m-0 overflow-x-hidden">
+        <div class="px-7 mt-4">
+      <div class="h-[80px] flex p-[10px] border-none shadow-md rounded-full">
+        <div class="w-[20%] flex items-center justify-center gap-3">
+          <i class="fa-solid fa-plus text-[45px] text-blue-600"></i>
+          <div>
+            <h1 class="text-[33px] font-bold">DSP</h1>
+            <h1 class="text-[20px] -mt-3 font-bold text-blue-700">Hospital</h1>
+          </div>
+        </div>
+        <div class="w-[60%] px-[40px] font-semibold flex items-center justify-center gap-[60px]">
+          <a href="{{url_for('fhome')}}" class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-house text-[15px]"></i>
+            <h2 class="text-[17px] hover:underline decoration-2 underline-offset-4 mt-[1px]">
+              Home
+            </h2></a>
+
+          <a
+            href="{{url_for('f_finddoctor')}}"
+            class="text-sky-700 flex items-center gap-1">
+            <i class="fa-solid fa-user-doctor text-[17px]"></i>
+            <h2
+              class="underline decoration-2 underline-offset-4 text-[17px] mt-[4.5px]">
+              FindDoctor
+            </h2></a>
+          <a
+            href="{{url_for('f_myappointment')}}"
+            class="hover:text-sky-700 flex items-center gap-1"
+            ><i class="fa-solid fa-calendar-days text-[17px]"></i>
+            <h2 class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4px]">
+              MyAppointment
+            </h2></a>
+          <a href="{{url_for('f_about')}}" class=" flex items-center gap-1"
+            ><i class="fa-solid fa-circle-info text-[17px]"></i>
+            <h2
+              class="hover:underline text-[17px] decoration-2 underline-offset-4 mt-[3px]">
+              About us
+            </h2></a>
+        </div>
+       <div class="w-[20%] flex items-center justify-center gap-4">
+        <a href="{{url_for('login')}}" class=" font-bold px-4 py-2 hover:shadow-2xl hover:text-md border-slate-200 border-[2px] rounded-md">
+            Sign in
+        </a>
+         <a href="{{url_for('create_new')}}" class=" font-bold px-4 py-2 border-slate-200 border-[2px] rounded-md bg-blue-600 text-white hover:bg-blue-700">
+            Sign Up
+        </a>
+        
+        </div>
+
+      </div>
+    </div>
+
+
+<!-- This first section of find doctor -->
+
+<section class="w-full py-[90px] px-[120px]   lg:shadow-2xl shadow-blue-200 rounded-xl flex items-center gap-20">
+  <div class="">
+
+   <h2 class="text-2xl md:text-4xl font-semibold font-serif">Find Your Doctor
+   </h2>
+   <p class=" mt-3 font-serif">Search By Name, Speciality  <br>
+  We'll help you find the right care  </p>
+
+   </div>
+   <form action="/dataSearched" method="post">
+    <div class="p-2 flex items-center justify-center">
+      <div class="p-3 px-[15px] border-slate-400 border-b-[1px] border-t-[1px] border-l-[1px] rounded-[5px] flex items-center gap-2">
+        <i class="fa-solid fa-magnifying-glass"></i>
+         <input type="text" name="input" class="text-[15px] w-[250px] border-none outline-none"  placeholder="Try 'name' or 'Speciality'.......">
+
+      </div>
+      <button type="submit" class=" w-[150px] p-[11px] border rounded-md text-white font-bold text-[17px] bg-sky-700">
+        Search
+      </button>
+    </div>
+    </form>
+  
+</section>
+
+<!-- This is the second hero section -->
+
+<div class="w-full px-[30px] py-[10px]">
+<section class="px-8 py-11 -mt-[30px] bg-white border-1 border-slate-300 shadow-md border rounded-md
+grid grid-cols-2  md:grid-cols-4 gap-4">
+
+<!--  -->
+{% for i in results %}
+<div class="p-4 border-[1.5px] pb-6 shadow-md rounded-[10px] border-slate-300">
+  <div class="relative">
+    <div class=" absolute top-[3px] left-[2px] py-1 px-3 {{'bg-green-500 shadow-green-700' if i.status=='available' else 'bg-slate-500 shadow-slate-700'}} font-bold shadow-md rounded-full flex items-center justify-center gap-2"><i class="fa-solid fa-circle text-white text-[10px]"></i><span class="text-white text-[10px] capitalize ">{{i.status}}</span></div>
+  <img class="block shrink-0 h-[215px] w-full rounded-md object-cover object-top "  src="data:image/png;base64,{{i.image}}" 
+  alt="">
+  </div>
+  <h2 class="lg:text-[17px] mt-3 p-[3px] leading-[20px] sm:font-bold">DR. {{i.name}}</h2>
+  <p class="p-[3px] text-slate-800 mt-1 font-serif">{{i.specalist}}</p>
+  <p class="p-[3px] text-slate-800 flex items-center gap-2 font-serif"><i class="fa-solid fa-award"></i> {{i.year}} years experince </p>
+  <p class="p-[3px] text-slate-800 flex items-center gap-2 font-serif"><i class="fa-solid fa-star"></i> {{i.rating}}</p>
+  <hr class="mt-3 h-[1.5px] bg-sky-300">
+
+  <div class="p-[3px] text-slate-800 mt-3.5 flex items-center justify-between gap-1">
+    <div>
+  <p class="  font-serif font-semibold">Fees</p>
+  <p><i class="fa-solid fa-indian-rupee-sign"></i> {{i.fees}}</p>
+    </div>
+
+    <div class="">
+      {% if i.status =='available' %}
+      <a href="/booked/{{i.id}}" class=" whitespace-nowrap p-2 px-4  hover:bg-sky-700 flex items-center justify-center rounded-md bg-sky-500 font-bold text-white">
+      Book Now
+      </a>
+      {% else %}
+       <a href="/disable/{{i.id}}" class=" whitespace-nowrap p-2 px-6  hover:bg-slate-700 flex items-center justify-center rounded-md bg-slate-500 font-bold text-white">
+      Reason
+      </a>
+      {% endif %}
+      <!-- whitespace-nowrap tells the browser: don’t break this text onto a new line, even if it runs out of space. -->
+
+    </div>
+  </div>
+
+</div>
+
+{% else %}
+    <div class=" col-span-full text-center   py-10 text-slate-600 font-serif">
+      <i class="fa-solid fa-user-doctor text-3xl mb-2"></i>
+      <p class="text-lg font-semibold">No doctor found</p>
+      <p>Try a different name or specialist.</p>
+    </div>
+
+{% endfor %}
+
+
+</section>
+</div>
+
+
+{% include "footer.html" %}
+    
+
+</body>
+</html>

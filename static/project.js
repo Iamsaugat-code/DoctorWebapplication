@@ -20,5 +20,4 @@ locked.addEventListener("click", () => {
 
 
 
-
 //  red color

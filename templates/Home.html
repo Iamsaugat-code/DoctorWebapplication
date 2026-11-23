@@ -22,7 +22,7 @@
           </div>
         </div>
         <div
-          class="w-[60%] px-[40px] font-semibold flex items-center justify-center gap-[60px]"
+          class="w-[60%] px-[30px]  font-semibold flex items-center justify-center gap-[60px]"
         >
           <a href="/home" class="text-sky-700 flex items-center gap-1"
             ><i class="fa-solid fa-house text-[15px]"></i>
@@ -52,8 +52,9 @@
               About us
             </h2></a>
         </div>
-       <div class="w-[20%] flex items-center justify-center gap-4">
-        <div class=" relative p-[6px] shadow-xl border rounded-full">
+        <div class="w-[18%] mt-1 ml-4 relative z-40 rounded-md bg-white px-2 ">
+          <button id="menubtn" class="hover:text-blue-800 flex items-center justify-center gap-1 pl-3">
+            <div class=" relative p-[6px] shadow-xl border rounded-full">
             <div class="h-[36px] w-[36px] p-2 bg-blue-500 rounded-full flex items-center justify-center">
           <i class="fa-solid fa-user text-white text-xl"></i>
             </div>
@@ -61,12 +62,23 @@
             <div class=" absolute -right-1 bottom-[1px] h-[13px] w-[13px] rounded-full bg-green-500 shadow-lg shadow-green-600 ">
             </div>
         </div>
-            <a href="{{url_for('profile')}}" class=" hover:text-blue-800 flex items-center justify-center">
-          <h1 class="hover:underline decoration-2 underline-offset-4 font-semibold text-[18px] tracking-[px] capitalize ">Hi {{current_user}}</h1>
-          </a>
+            <i id="arrow"  class="fa-solid fa-sort-down"></i></button>
+          <div id="menus" class="hidden bg-white px-2 py-2 rounded-b-md relative right-6" >
+             <a href="{{url_for('history')}}" class="appointment mt-2 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-calendar-days text-md"></i>
+                    <h2 class=" text-[16px]">Booking History</h2>
+                </a>
+                 <a href="{{url_for('passwords')}}" class="password mt-1 px-3 py-2  hover:text-white w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-lock text-md"></i>
+                    <h2 class="text-[16px]">Change password</h2>
+                </a>
+                 <a href="{{url_for('logout')}}" class="logout mt-1 hover:text-white  px-3 py-2  w-full flex items-center gap-3 hover:bg-blue-500 hover:rounded-md ">
+                    <i class="fa-solid fa-right-from-bracket text-md"></i>
+                    <h2 class="text-[16px]">Logout</h2>
+                </a>
+          </div>
         </div>
-
-      </div>
+        </div>
     </div>
 
 
@@ -239,6 +251,6 @@
     {% include 'footer.html'%}
 
 
-    <script src="/static/project.js"></script>
+    <script src="/static/home.js"></script>
   </body>
 </html>

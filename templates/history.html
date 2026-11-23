@@ -12,39 +12,50 @@
     />
     <link rel="stylesheet" href="/static/src/output.css" />
 </head>
-<body class="m-0 overflow-x-hidden" >
+<body class="m-0 overflow-x-hidden h-screen" >
      <div class="px-7 mt-4">
-      <div class="h-[80px] flex p-[10px]  border shadow-md rounded-full">
+      <div class="h-[80px] flex p-[10px] border shadow-md rounded-full">
         <div class="w-[20%] flex items-center justify-center gap-3">
-        <i class="fa-solid fa-plus text-[45px] text-blue-600"></i>
+          <i class="fa-solid fa-plus text-[45px] text-blue-600"></i>
           <div>
             <h1 class="text-[33px] font-bold">DSP</h1>
             <h1 class="text-[20px] -mt-3 font-bold text-blue-700">Hospital</h1>
           </div>
         </div>
         <div
-          class="w-[60%] px-[40px] font-semibold flex items-center justify-center gap-[60px]">
-          <a href="/home" class="hover:text-sky-700 flex items-center gap-1"
+          class="w-[60%] px-[40px]  font-semibold flex items-center justify-center gap-[60px]"
+        >
+          <a href="/home" class="text-sky-700 flex items-center gap-1"
             ><i class="fa-solid fa-house text-[15px]"></i>
-            <h2 class=" text-[17px] hover:underline decoration-2 underline-offset-4 mt-[1px]">Home</h2></a>
+            <h2 class="text-[17px] underline decoration-2 underline-offset-4 mt-[1px]">
+              Home
+            </h2></a>
 
-          <a href="/finddoctor" class="hover:text-sky-700 flex items-center gap-1">
+          <a
+            href="/finddoctor"
+            class="hover:text-sky-700 flex items-center gap-1">
             <i class="fa-solid fa-user-doctor text-[17px]"></i>
-            <h2 class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4.5px] ">FindDoctor</h2></a>
-
-          <a href="/show_appointment" class="hover:text-sky-700 flex items-center gap-1"
+            <h2
+              class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4.5px]">
+              FindDoctor
+            </h2></a>
+          <a
+            href="/show_appointment"
+            class="hover:text-sky-700 flex items-center gap-1"
             ><i class="fa-solid fa-calendar-days text-[17px]"></i>
             <h2 class="hover:underline decoration-2 underline-offset-4 text-[17px] mt-[4px]">
               MyAppointment
             </h2></a>
-
-          <a href="/about" class="hover:text-sky-700 flex items-center gap-1"
+          <a href="/about" class=" flex items-center gap-1"
             ><i class="fa-solid fa-circle-info text-[17px]"></i>
-            <h2 class="hover:underline text-[17px] decoration-2 underline-offset-4 mt-[3px]">About us</h2></a
-          >
+            <h2
+              class="hover:underline text-[17px] decoration-2 underline-offset-4 mt-[3px]">
+              About us
+            </h2></a>
         </div>
-         <div class="w-[20%] flex items-center justify-center gap-4">
-        <div class=" relative p-[6px] shadow-xl border rounded-full">
+        <div class="w-[18%] mt-1 ml-4 relative z-40 rounded-md bg-white px-2 ">
+          <button id="menubtn" class="hover:text-blue-800 flex items-center justify-center gap-1 pl-3">
+            <div class=" relative p-[6px] shadow-xl border rounded-full">
             <div class="h-[36px] w-[36px] p-2 bg-blue-500 rounded-full flex items-center justify-center">
           <i class="fa-solid fa-user text-white text-xl"></i>
             </div>
@@ -52,59 +63,30 @@
             <div class=" absolute -right-1 bottom-[1px] h-[13px] w-[13px] rounded-full bg-green-500 shadow-lg shadow-green-600 ">
             </div>
         </div>
-            <a href="{{url_for('profile')}}" class=" hover:text-blue-800 flex items-center justify-center">
-          <h1 class="hover:underline decoration-2 underline-offset-4 font-semibold text-[18px] tracking-[px] capitalize ">Hi {{current_user}}</h1>
-          </a>
+            <i id="arrow"  class="fa-solid fa-sort-down"></i></button>
+          <div id="menus" class="hidden bg-white px-2 py-2 rounded-b-md relative right-6" >
+             <a href="{{url_for('history')}}" class="appointment mt-2 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-calendar-days text-md"></i>
+                    <h2 class=" text-[16px]">Booking History</h2>
+                </a>
+                 <a href="{{url_for('passwords')}}" class="password mt-1 px-3 py-2  hover:text-white w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-lock text-md"></i>
+                    <h2 class="text-[16px]">Change password</h2>
+                </a>
+                 <a href="{{url_for('logout')}}" class="logout mt-1 hover:text-white  px-3 py-2  w-full flex items-center gap-3 hover:bg-blue-500 hover:rounded-md ">
+                    <i class="fa-solid fa-right-from-bracket text-md"></i>
+                    <h2 class="text-[16px]">Logout</h2>
+                </a>
+          </div>
         </div>
-      </div>
-      </div>
+
+        </div>
+
+    </div>
 
     <div class="py-5 mt-5 px-5 flex  gap-6">
-        <div class="w-[25%] p-4 rounded-md shadow-lg border-[1px]">
-            <div class="w-fit mx-auto">
-                <div class="h-[150px] w-[150px] p-3 rounded-full bg-blue-50 flex items-center justify-center">
-                    <i class="fa-solid fa-user-tie text-blue-600 text-8xl"></i>
-                </div>
-            </div>
-            <div  class="mt-4 w-fit mx-auto p-2 pb-5 ">
-                <h2 class="font-bold tracking-[2px] text-[22px]">Hello, {{current_user}}</h2>
-                <h2 class="text-blue-600 w-fit mx-auto mt-2 text-xl">Patient</h2>
-            </div>
-            <div class="px-3 py-1">
-            <hr class="w-full h-[3px] bg-slate-500">
-            </div>
-            <div class="py-4 px-2 mt-1">
-                <a href="{{url_for('profile')}}" class="profile hover:text-white px-4 py-3  w-full flex items-center gap-3  hover:rounded-md hover:bg-blue-500">
-                     <i class="fa-solid fa-user text-xl"></i>
-                    <h2 class="text-[18px]">My profile</h2>
-                </a>
-                <a href="{{url_for('history')}}" class="appointment mt-1 text-white  px-4 py-3  w-full flex items-center gap-3 rounded-md bg-blue-500">
-                     <i class="fa-solid fa-calendar-days text-xl"></i>
-                    <h2 class=" text-[18px]">Appointment History</h2>
-                </a>
-                <a href="{{url_for('passwords')}}" class="password mt-1 px-4 py-3  hover:text-white  w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
-                     <i class="fa-solid fa-lock text-xl"></i>
-                    <h2 class="text-[18px]">Change password</h2>
-                </a>
-                <a href="{{url_for('logout')}}" class="logout mt-1 hover:text-white  px-4 py-3  w-full flex items-center gap-3 hover:bg-blue-500 hover:rounded-md  active:rounded-md active:bg-blue-500">
-                    <i class="fa-solid fa-right-from-bracket text-xl"></i>
-                    <h2 class="text-[18px]">Logout</h2>
-                </a>
-            </div>
-        </div>
-        <div class="w-[80%] px-[10px]">
-            <div class=" border rounded-md p-4 px-6 shadow-lg bg-gradient-to-r from-[#2563EB] via-[#BFDBFE] to-[#EFF6FF] flex items-center justify-between"
-            style="background-image: linear-gradient(to right, #2563EB, #BFDBFE, #EFF6FF);"> 
-                <div class=" text-white">
-                    <h1 class="font-bold font-serif text-4xl">Appointment History</h1>
-                    <h1 class="mt-1 font-semibold font-serif text-md">Manage your Appointment History </h1>
-                </div>
-                <i class="fa-solid fa-heart-pulse text-8xl text-blue-300"></i>
-            </div>
-
-            <!-- details about history -->
-             <div class="mt-5  py-2 grid grid-cols-3 sm:grid-cols-3 gap-8 ">
-                <div class="rounded-xl w-full bg-gradient-to-r from-[#F0F7FF] to-[#DBEAFE] py-4 px-1 shadow-xl border flex items-center gap-3">
+        <div class="w-[25%] p-4 rounded-xl shadow-lg  border-[1px]">   
+         <div class="rounded-md w-full bg-gradient-to-r from-[#F0F7FF] to-[#DBEAFE] py-4 px-1 shadow-md border flex items-center gap-3">
                     <div class="px-4 py-2 border-r-[2.5px]">
                         <div class=" h-[60px] w-[60px] rounded-full bg-blue-100 flex items-center justify-center">
                             <i class="fa-solid fa-calendar-days text-3xl text-blue-600 "></i>
@@ -116,7 +98,7 @@
                     </div>
                 </div>
 
-                 <div class="rounded-xl bg-gradient-to-r from-[#ECFDF5] to-[#D1FAE5] py-4 px-1 shadow-xl border flex items-center gap-3">
+         <div class="rounded-xl mt-5 bg-gradient-to-r from-[#ECFDF5] to-[#D1FAE5] py-4 px-1 shadow-md border flex items-center gap-3">
                     <div class="px-4 py-2 border-r-[2.5px]">
                         <div class=" h-[60px] w-[60px] rounded-full bg-green-100 flex items-center justify-center">
                             <i class="fa-solid fa-circle-check text-3xl text-green-600 "></i>
@@ -128,7 +110,7 @@
                     </div>
                 </div>
 
-                 <div class="rounded-xl bg-gradient-to-r from-[#FFF7ED] to-[#FFEDD5] py-4 px-1 shadow-xl border flex items-center gap-3">
+            <div class="rounded-xl mt-5 bg-gradient-to-r from-[#FFF7ED] to-[#FFEDD5] py-4 px-1 shadow-md border flex items-center gap-3">
                     <div class="px-4 py-2 border-r-[2.5px]">
                         <div class=" h-[60px] w-[60px] rounded-full bg-orange-100 flex items-center justify-center">
                             <i class="fa-solid fa-circle-xmark text-3xl text-orange-600 "></i>
@@ -139,19 +121,21 @@
                         <h2 class=" font-semibold">Total Cancel</h2>
                     </div>
                 </div>
-
-
-
-             </div>
-
-            <!-- this history part -->
-             <div class="mt-10 rounded-md px-4 py-7 shadow-xl border ">
-                <div class="p-4 text-sky-900 flex items-center gap-3">
-                     <i class="fa-solid fa-calendar-days text-3xl"></i>
-                    <h2 class=" text-3xl font-bold tracking-[1.5px] font-serif">My Appointments</h2>
+        </div>
+        <div class="w-[80%] px-[10px]">
+            <div class=" border rounded-md p-4 px-6 shadow-lg bg-gradient-to-r from-[#2563EB] via-[#BFDBFE] to-[#EFF6FF] flex items-center justify-between"
+            style="background-image: linear-gradient(to right, #2563EB, #BFDBFE, #EFF6FF);"> 
+                <div class=" text-white">
+                    <h1 class="font-bold font-serif text-4xl">Appointment History</h1>
+                    <h1 class="mt-1 font-semibold font-serif text-md">Manage your Appointment History </h1>
                 </div>
-                <div class="mt-5">
-                <table border="1" class="w-full text-center  rounded-md">
+                <i class="fa-solid fa-heart-pulse text-8xl text-blue-300"></i>
+            </div>
+
+             <div class="mt-6  ">
+              
+                <div class="">
+                <table border="1" class="w-full text-center  rounded-md px-4 py-2 shadow-xl border">
                     <colgroup>
                         <col class="w-[5%]">
                         <col class="w-[20%]">
@@ -199,6 +183,7 @@
 
         </div>
     </div>
-    <div class="h-5 w-full"></div>
+        <script src="/static/home.js"></script>
+
 </body>
 </html>

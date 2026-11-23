@@ -1,9 +1,12 @@
 
 
 from flask import Flask,jsonify,render_template,request,redirect,flash,url_for,session,Response
+from email.message import EmailMessage
+import os,random,time,smtplib
 import mysql.connector
 import base64
 import re
+
 
 app = Flask(__name__)
 app.secret_key ="mykey123@"
@@ -23,6 +26,7 @@ def user_detect():
                             )
     cursor = con.cursor()
     username = session.get("username")
+    admin = session.get("admin")
     try:
         cursor.execute("select * from useraccount where username =%s",(username,))
         data = cursor.fetchone()
@@ -31,7 +35,7 @@ def user_detect():
         con.close()
     if data is None:
         return {"current_user":"none"}
-    return {"current_user":data[2],"username":username}
+    return {"current_user":data[1],"username":username,"current_admin":admin}
 
 # this is relate to the none user page 
 # front Home 
@@ -81,8 +85,12 @@ def f_about():
 def gotologin():
     return render_template("notallowed.html")
 
-
-#  upto here
+# admin relate worked
+@app.route("/adminHome")
+def admin_home():
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    return render_template("ahome.html")
 
 # login page
 @app.route("/login",methods=["GET"])
@@ -336,13 +344,18 @@ def login_account():
             if not all([username,password]):
                 flash("fill the feild first","error")
                 return redirect(url_for("login_account"))
+            
+            if username =='admin' and password=='admin123':
+                session["admin"] = username
+                return redirect(url_for('admin_home'))
+            print(username,password)
                 
-        
             cursor.execute("SELECT COUNT(*) FROM useraccount where username =%s",(username,))
             user_value = cursor.fetchone()[0]
             
-            cursor.execute("SELECT COUNT(*) FROM useraccount where password =%s",(password,))
+            cursor.execute("SELECT COUNT(*) FROM useraccount where passwords =%s",(password,))
             password_value = cursor.fetchone()[0]
+            
             
             if user_value >= 1 and password_value >= 1:
                 session["username"] =username
@@ -365,16 +378,31 @@ def login_account():
     return render_template("login.html") 
 
 
-#  message_box:
-message_box = {
-    "gmail":"This email is already registered.",
-    "username":"This username is taken.",
-    "phone":"This phone number is already in use."
-}
+# this is for the create account of the user
 
-# this is for the create account of the user 
+sender = os.environ.get("GMAIL_SENDER")
+app_password = os.environ.get("GMAIL_APP_PASSWORD")
 
-@app.route("/account",methods=["GET","POST"])
+def send_code(to_email):
+    code = str(random.randint(100000,999999))
+    session["otp"] =code
+    session["otp_time"] = time.time()
+    session["otp_tries"] =0
+    
+    msg = EmailMessage()
+    msg["Subject"] = "your verification code"
+    msg["From"] = sender
+    msg["To"] = to_email
+    msg.set_content(f" Your code is {code}. IT expires in 60 sec")
+    
+    
+    with smtplib.SMTP_SSL("smtp.gmail.com",465) as s:
+        s.login(sender,app_password)
+        s.send_message(msg)
+    
+
+
+@app.route("/send_code",methods=["GET","POST"])
 def new_account():
     con = mysql.connector.connect(
                host ='localhost',
@@ -385,66 +413,43 @@ def new_account():
     cursor = con.cursor()
     try:
         if request.method =="POST":
-            username = request.form.get("named","").strip()
-            fullname = request.form.get("fullname","").strip()
+            
+            gmail = request.form.get("email","").strip().lower()
             password = request.form.get("password","").strip()
-            phone = request.form.get("phone","").strip()
-            gmail = request.form.get("email","").strip()
             
-            # "" this respresent the default value
             
-            if not all([username,fullname,password,phone,gmail]):
+            if not all([password,gmail]):
                 flash("Please fill all fields", "error")
-                
                 return redirect(url_for("new_account"))
-                # return render_template("createnew.html")
-                
-            
-            if not re.fullmatch(r"[0-9]{10}",phone):
-                flash("Enter a valid 10 digit phone number", "error")
-                return redirect(url_for("new_account"))
-                return render_template("createnew.html")
+             
                     
             if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", gmail):
                 flash("Enter a valid email address", "error")
                 return redirect(url_for("new_account"))
-                # return render_template("createnew.html")
                 
             
             if len(password) <6:
                 flash("Password must be at least 6 characters long","error")
-                # return redirect(url_for("new_account"))
-                return render_template("createnew.html")
-                
+                return redirect(url_for("new_account"))
             
-            cursor.execute("insert into useraccount (username,fullname,password,phone,gmail) values(%s,%s,%s,%s,%s)",(username,fullname,password,phone,gmail))
-            con.commit()
-            flash("new account create successfully! ","success")
-            return redirect(url_for("login"))
-    except mysql.connector.IntegrityError as e:
-        con.rollback()
-        if e.errno == 1062:
-            key = e.msg.split("for key")[-1].strip(" '").split(".")[-1]
-            flash(message_box.get(key,"duplicate value"),"error")
-                    # if 'username' in key.lower():
-                    #     feild_e ="username"
-                    # elif 'phone' in key.lower():
-                    #     feild_e ="phone"
-                    # elif 'gmail' in key.lower():
-                    #     feild_e ="gmail"
-                    # else:
-                    #     flash("duplicate data is detected ! ","error")
-            return redirect(url_for("new_account"))
-            # return render_template("createnew.html")
-                         
-        else:
-            flash("database error : ","error")
-            # return render_template("createnew.html")
-            return redirect(url_for("new_account"))
+            cursor.execute("select count(*) from useraccount where username = %s limit 1",(gmail,))
+            data = cursor.fetchone()[0]
+            if data == 1:
+                flash(f"{gmail} is already in used","error")
+                return redirect(url_for("new_account"))
+            session["pending_email"] = gmail
+            session["pending_pass"]  = password
+            
+            try:
+                send_code(gmail)
+            except Exception as e:     
+                flash("Could not send email. Check the address and try again.", "error")
+                return redirect(url_for("new_account"))
+                    
+            return redirect(url_for("verification"))
             
     except mysql.connector.Error:
         flash("database connection error , please try again","error")
-        # return render_template("createnew.html")
         return redirect(url_for("new_account"))
         
         
@@ -453,6 +458,48 @@ def new_account():
         con.close() 
     
     return render_template("createnew.html")
+
+@app.route("/verification")
+def verification():
+    if "pending_email" not in session:
+        return redirect(url_for('new_account'))
+    return render_template("verif.html",email =session["pending_email"])
+
+@app.route("/getverification",methods =["GET","POST"])
+def verify():
+    if "pending_email" not in session:
+        return redirect(url_for('new_account'))
+    
+    if time.time() - session.get("otp_time",0)>120:
+        flash("Code expired. Please sign up again.", "error")
+        return redirect(url_for('new_account'))
+    
+    session["otp_tries"] = session.get("otp_tries",0)+1
+    if session["otp_tries"] >5:
+        flash("Too many attempts. Please sign up again.", "error")
+        return redirect(url_for('new_account'))
+    
+    con = mysql.connector.connect(
+               host ='localhost',
+               user='root',
+               password ='password',
+               database ='doctorapplication'
+        )
+    cursor = con.cursor()
+    if request.form.get("code", "").strip() != session.get("otp"):
+        flash("Wrong code", "error")
+        return redirect(url_for("verification"))
+    try:
+       cursor.execute("insert into useraccount (username,passwords,optcode) values(%s,%s,%s)",   (session["pending_email"], session["pending_pass"],session["otp"]))       
+       con.commit()
+         
+    finally:
+        cursor.close()
+        con.close()
+    for k in ("otp", "otp_time", "otp_tries", "pending_email", "pending_pass"):
+        session.pop(k, None)            
+    
+    return render_template(url_for("login"))
 
 
 def get_connection():

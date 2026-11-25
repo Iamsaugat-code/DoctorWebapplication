@@ -53,7 +53,7 @@
               About us
             </h2></a>
         </div>
-        <div class="w-[18%] mt-1 ml-4 relative z-40 rounded-md bg-white px-2 ">
+        <div class="w-[18%] mt-1 pl-[60px] relative z-40 rounded-md bg-white px-2 ">
           <button id="menubtn" class="hover:text-blue-800 flex items-center justify-center gap-1 pl-3">
             <div class=" relative p-[6px] shadow-xl border rounded-full">
             <div class="h-[36px] w-[36px] p-2 bg-blue-500 rounded-full flex items-center justify-center">
@@ -64,8 +64,12 @@
             </div>
         </div>
             <i id="arrow"  class="fa-solid fa-sort-down"></i></button>
-          <div id="menus" class="hidden bg-white px-2 py-2 rounded-b-md relative right-6" >
-             <a href="{{url_for('history')}}" class="appointment mt-2 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
+          <div id="menus" class="hidden w-[200px] bg-white px-2 py-2 rounded-b-md border-b-slate-300 border-b-[2px] relative right-6" >
+            <a href="{{url_for('profile')}}" class="profile  px-3 py-2  w-full flex items-center gap-3 hover:text-white hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-user text-xl"></i>
+                    <h2 class="text-[16px]">My profile</h2>
+                </a> 
+            <a href="{{url_for('history')}}" class="appointment mt-2 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
                      <i class="fa-solid fa-calendar-days text-md"></i>
                     <h2 class=" text-[16px]">Booking History</h2>
                 </a>
@@ -126,10 +130,10 @@
             <div class=" border rounded-md p-4 px-6 shadow-lg bg-gradient-to-r from-[#2563EB] via-[#BFDBFE] to-[#EFF6FF] flex items-center justify-between"
             style="background-image: linear-gradient(to right, #2563EB, #BFDBFE, #EFF6FF);"> 
                 <div class=" text-white">
-                    <h1 class="font-bold font-serif text-4xl">Appointment History</h1>
+                    <h1 class="font-bold font-serif text-3xl">Appointment History</h1>
                     <h1 class="mt-1 font-semibold font-serif text-md">Manage your Appointment History </h1>
                 </div>
-                <i class="fa-solid fa-heart-pulse text-8xl text-blue-300"></i>
+                <i class="fa-solid fa-heart-pulse text-6xl text-blue-300"></i>
             </div>
 
              <div class="mt-6  ">
@@ -160,7 +164,7 @@
                     <tbody class="">
                     {% for i in results%}
                     <tr class="odd:bg-white capitalize even:bg-blue-50 ">
-                        <td class="p-2 rounded-l-md">{{loop.index}}</td>
+                        <td class="p-2 rounded-l-md">{{ offset+loop.index}}</td>
                         <td class="p-2">{{i[1]}}</td>
                         <td class="p-2">{{i[2]}}</td>
                         <td class="p-2">{{i[3]}}</td>                        
@@ -175,6 +179,25 @@
                        
                     </tbody>
                 </table>
+                 <div class="mt-3 px-6 py-8 flex items-center justify-between">
+                <div class=" flex items-center px-4">
+                     <h2>Page {{ page }} out of {{ total_page }}  </h2>
+                </div>
+                <div class=" text-xl flex items-center justify-center gap-4 px-8">
+                    {% if page > 1 %}
+                    <a href="{{url_for('history',page = page - 1)}}" class="px-4 py-2  rounded-xl border-slate-200 border-[1px] hover:bg-gray-100 flex items-center text-[15px]">
+                        <h2 class="font-semibold">Previous</h2>
+                    </a>
+                    {% endif %}
+
+                    {% if page < total_page %}
+                    <a href="{{url_for('history',page = page + 1)}}" class="px-4 py-2  rounded-xl hover:bg-gray-100 border-slate-200 border-[1px] flex items-center text-[15px]">
+                         <h2 class="font-semibold">Next</h2>
+                         <!-- <i class="fa-solid fa-chevron-right"></i> -->
+                    </a>
+                    {% endif %}
+                </div>
+             </div>
             </div>
 
             </div>

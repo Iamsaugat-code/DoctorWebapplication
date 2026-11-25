@@ -43,8 +43,10 @@
             <h2 class="hover:underline text-[17px] decoration-2 underline-offset-4 mt-[3px]">About us</h2></a
           >
         </div>
-        <div class="w-[20%] flex items-center justify-center gap-4">
-        <div class=" relative p-[6px] shadow-xl border rounded-full">
+
+         <div class="w-[18%] mt-1 pl-[60px] relative z-40 rounded-md bg-white px-2 ">
+          <button id="menubtn" class="hover:text-blue-800 flex items-center justify-center gap-1 pl-3">
+            <div class=" relative p-[6px] shadow-xl border rounded-full">
             <div class="h-[36px] w-[36px] p-2 bg-blue-500 rounded-full flex items-center justify-center">
           <i class="fa-solid fa-user text-white text-xl"></i>
             </div>
@@ -52,55 +54,53 @@
             <div class=" absolute -right-1 bottom-[1px] h-[13px] w-[13px] rounded-full bg-green-500 shadow-lg shadow-green-600 ">
             </div>
         </div>
-            <a href="{{url_for('profile')}}" class=" hover:text-blue-800 flex items-center justify-center">
-          <h1 class="hover:underline decoration-2 underline-offset-4 font-semibold text-[18px] tracking-[px] capitalize ">Hi {{current_user}}</h1>
-          </a>
+            <i id="arrow"  class="fa-solid fa-sort-down"></i></button>
+          <div id="menus" class="hidden bg-white px-2 py-2 rounded-b-md w-[200px] border-b-slate-300 border-b-[2px] relative right-6" >
+            <a href="{{url_for('profile')}}" class="profile  px-3 py-2  w-full flex items-center gap-3 hover:text-white hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-user text-xl"></i>
+                    <h2 class="text-[16px]">My profile</h2>
+                </a> 
+            <a href="{{url_for('history')}}" class="appointment mt-2 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-calendar-days text-md"></i>
+                    <h2 class=" text-[16px]">Booking History</h2>
+                </a>
+                 <a href="{{url_for('passwords')}}" class="password mt-1 px-3 py-2  hover:text-white w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-lock text-md"></i>
+                    <h2 class="text-[16px]">Change password</h2>
+                </a>
+                 <a href="{{url_for('logout')}}" class="logout mt-1 hover:text-white  px-3 py-2  w-full flex items-center gap-3 hover:bg-blue-500 hover:rounded-md ">
+                    <i class="fa-solid fa-right-from-bracket text-md"></i>
+                    <h2 class="text-[16px]">Logout</h2>
+                </a>
+          </div>
         </div>
+
       </div>
       </div>
 
     <div class="py-5 mt-5 px-5 flex  gap-6">
         <div class="w-[25%] p-4 rounded-md shadow-lg border-[1px]">
-            <div class="w-fit mx-auto">
+            <div class="w-fit mt-12 mx-auto">
                 <div class="h-[150px] w-[150px] p-3 rounded-full bg-blue-50 flex items-center justify-center">
                     <i class="fa-solid fa-user-tie text-blue-600 text-8xl"></i>
                 </div>
             </div>
-            <div  class="mt-4 w-fit mx-auto p-2 pb-5 text-center ">
+            <div  class="mt-4 w-fit mx-auto p-2 pb-5  ">
+                <div class=" text-center">
                 <h2 class="font-bold tracking-[2px] text-[22px]">Hello</h2>
-                <h2 class="font-bold tracking-[2px] text-[16px]">{{current_user}}</h2>
+                <h2 class="font-bold tracking-[2px] text-[14px]">{{current_user}}</h2>
                 <h2 class="text-blue-600 w-fit mx-auto mt-2 text-xl">Patient</h2>
-            </div>
-            <div class="px-3 py-1">
-            <hr class="w-full h-[3px] bg-slate-500">
-            </div>
-            <div class="py-4 px-2 mt-1">
-                <a href="{{url_for('profile')}}" class="profile  px-4 py-3  w-full flex items-center gap-3 text-white rounded-md bg-blue-500">
-                     <i class="fa-solid fa-user text-xl"></i>
-                    <h2 class="text-[18px]">My profile</h2>
-                </a>
-                <a href="{{url_for('history')}}" class="appointment mt-1 hover:text-white  px-4 py-3  w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
-                     <i class="fa-solid fa-calendar-days text-xl"></i>
-                    <h2 class=" text-[18px]">Appointment History</h2>
-                </a>
-                <a href="{{url_for('passwords')}}" class="password mt-1 px-4 py-3  hover:text-white w-full flex items-center gap-3 hover:rounded-md hover:bg-blue-500">
-                     <i class="fa-solid fa-lock text-xl"></i>
-                    <h2 class="text-[18px]">Change password</h2>
-                </a>
-                <a href="{{url_for('logout')}}" class="logout mt-1 hover:text-white  px-4 py-3  w-full flex items-center gap-3 hover:bg-blue-500 hover:rounded-md ">
-                    <i class="fa-solid fa-right-from-bracket text-xl"></i>
-                    <h2 class="text-[18px]">Logout</h2>
-                </a>
+                </div>
             </div>
         </div>
         <div class="w-[80%] px-[10px]">
             <div class=" border rounded-md p-4 px-6 shadow-lg bg-gradient-to-r from-[#2563EB] via-[#BFDBFE] to-[#EFF6FF] flex items-center justify-between"
             style="background-image: linear-gradient(to right, #2563EB, #BFDBFE, #EFF6FF);"> 
                 <div class=" text-white">
-                    <h1 class="font-bold font-serif text-4xl">My profile</h1>
+                    <h1 class="font-bold font-serif text-3xl">My profile</h1>
                     <h1 class="mt-1 font-semibold font-serif text-md">Manage your personal information </h1>
                 </div>
-                <i class="fa-solid fa-heart-pulse text-8xl text-blue-300"></i>
+                <i class="fa-solid fa-heart-pulse text-6xl text-blue-300"></i>
             </div>
 
             <div class="profile_box rounded-md shadow-lg mt-10 px-6 py-12 flex gap-3 border">
@@ -130,8 +130,8 @@
                         <h2 class=" font-serif text-[17px]">Email Address</h2>
                     </div>
                     <div class="mt-3 flex items-center gap-3">
-                        <i class="fa-solid fa-phone text-blue-700 text-[17px]"></i>
-                        <h2 class=" font-serif text-[17px]">Phone Number</h2>
+                        <i class="fa-solid fa-book-open text-blue-700 text-[17px]"></i>
+                        <h2 class=" font-serif text-[17px]">Open Account</h2>
                     </div>
                     <div class="mt-3 flex items-center gap-4">
                         <i class="fa-solid fa-user text-blue-700 text-[17px]"></i>
@@ -141,10 +141,10 @@
                 {% for i in results %}
                 <div class="ml-6 font-bold ">
                     <div class="mt-3 flex items-center gap-3">
-                        <h2 class=" font-serif text-[15px]"><i>{{i[2]}}</i></h2>
+                        <h2 class=" font-serif text-[15px]"><i>iamuser</i></h2>
                     </div>
                     <div class="mt-3.5 flex items-center gap-3">
-                        <h2 class=" font-serif text-[15px]"><i>{{i[5]}}</i></h2>
+                        <h2 class=" font-serif text-[15px]"><i>{{i[1]}}</i></h2>
                     </div>
                     <div class="mt-3.5 flex items-center gap-3">
                         <h2 class="text-[15px]"><i>{{i[4]}}</i></h2>
@@ -163,6 +163,7 @@
             </div>    
             </div>
         </div>
-    <div class="h-5 w-full"></div>
+ <script src="/static/home.js"></script>
+
 </body>
 </html>

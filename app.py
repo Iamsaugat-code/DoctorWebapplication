@@ -6,6 +6,7 @@ import os,random,time,smtplib
 import mysql.connector
 import base64
 import re
+import math
 
 
 app = Flask(__name__)
@@ -91,6 +92,107 @@ def admin_home():
     if 'admin' not in session:
         return redirect(url_for('login'))
     return render_template("ahome.html")
+
+@app.route("/admin/adddoctor",methods =["GET","POST"])
+def add_doctor():
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    con = mysql.connector.connect(
+               host ='localhost',
+               user='root',
+               password ='password',
+               database ='doctorapplication'
+        )
+    cursor = con.cursor()
+    try:
+        cursor.execute("select * from doctorlist;")
+        data = cursor.fetchall()
+        
+        doctorlist =[]
+        for i in data:
+            img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+            doctorlist.append({
+                'id':i[0],
+                'image':img,
+                'name':i[2],
+                'specalist':i[3],
+                'year':i[4],
+                'rating':i[5],
+                'fees':i[6],
+                'status':i[7]
+            }) 
+            
+        if request.method == "POST":
+            input_data = request.form.get("input")
+            pattern = "%"+input_data+"%"
+            
+            con = get_connection()
+            cursor = con.cursor()
+            cursor.execute("SELECT * FROM doctorlist WHERE name like %s OR specailist LIKE %s ",(pattern,pattern))
+            data = cursor.fetchall()
+            
+            doctor=[]
+            for i in data:
+                img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+                doctor.append(
+                    {
+                        'id':i[0],
+                        'image':img,
+                        'name':i[2],
+                        'specalist':i[3],
+                        'year':i[4],
+                        'rating':i[5],
+                        'fees':i[6],
+                        'status':i[7]
+                    }
+                )
+            return render_template("afinddoctor.html",results = doctor)
+                      
+    finally:
+        cursor.close()
+        con.close()
+        
+    
+    return render_template("afinddoctor.html",results = doctorlist)
+
+@app.route("/status",methods=["GET","POST"])
+def status():
+    con = mysql.connector.connect(
+                   host ='localhost',
+                   user='root',
+                   password ='password',
+                   database ='doctorapplication'
+            )
+    cursor = con.cursor()
+    try:
+        if request.method =="POST":
+            select_status = request.form.get("selectstatus","").strip()
+            doctor_id = request.form.get("doctor_id","")
+            cursor.execute("update doctorlist set status =%s where doctor_id =%s",(select_status,doctor_id))
+            con.commit()
+            
+            return redirect(url_for('add_doctor'))
+    finally:
+        cursor.close()
+        con.close()        
+    
+    return render_template("afinddoctor.html")
+
+
+@app.route("/admin/adding",methods=["GET","POST"])
+def adding_doctor():
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method =="POST":
+        f = request.files['image']
+        image_data = f.read()
+        image_type = f.mimetype
+        
+        print(image_type)
+        return redirect(url_for('adding_doctor'))
+    return render_template("adddoctor.html")
+
 
 # login page
 @app.route("/login",methods=["GET"])
@@ -202,8 +304,15 @@ def history():
         t_complete = cursor.fetchone()[0]
         cursor.execute("select COUNT(*) FROM book_appointment where status =%s and username =%s ",('cancel',username))
         cancel_t = cursor.fetchone()[0]
-
-        cursor.execute("select * from book_appointment where username = %s",(username,))
+        
+        page = request.args.get("page",1,type=int)
+        per_page = 5
+        if page <1:
+            page=1
+        offset = (page-1)*per_page
+        total_page = max(1,math.ceil(total/per_page))
+       
+        cursor.execute("select * from book_appointment where username = %s limit %s offset %s",(username,per_page,offset))
         data = cursor.fetchall()
     except mysql.connector.Error as e:
         flash("error relate to database","error")
@@ -212,7 +321,7 @@ def history():
         cursor.close()
         con.close()
     
-    return render_template("history.html",results=data,total=total,t_complete=t_complete,cancel_t=cancel_t)
+    return render_template("history.html",results=data,total=total,t_complete=t_complete,cancel_t=cancel_t,page=page,offset=offset,total_page=total_page)
 
 
 ## delete history data
@@ -291,7 +400,7 @@ def password_changed():
                 flash("please write the password first ","error")
                 return redirect(url_for("password_changed"))
             
-            cursor.execute("select user_id FROM useraccount where password =%s",(old_pass,))
+            cursor.execute("select user_id FROM useraccount where passwords =%s",(old_pass,))
             data = cursor.fetchone()
             
             if data is None:
@@ -304,7 +413,7 @@ def password_changed():
                 flash("New password is not match","error")
                 return redirect(url_for("password_changed"))
             
-            cursor.execute("update useraccount set password=%s where user_id = %s",(re_pass,user_id));
+            cursor.execute("update useraccount set passwords=%s where user_id = %s",(re_pass,user_id));
             con.commit()
             flash("Password changed successfully ! ","success")
             
@@ -510,45 +619,10 @@ def get_connection():
            database ='doctorapplication'
     )
 
-### data are searched 
-@app.route("/dataSearched",methods=["POST","GET"])
-def searchedData():
-    if request.method =='POST':
-        input_data = request.form.get("input")
-        pattern = "%"+input_data+"%"
-        
-        con = get_connection()
-        cursor = con.cursor()
-        cursor.execute("SELECT * FROM doctorlist WHERE name like %s OR specailist LIKE %s ",(pattern,pattern))
-        data = cursor.fetchall()
-        cursor.close()
-        con.close()
-        
-        doctor=[]
-        for i in data:
-            img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
-            doctor.append(
-                {
-                    'id':i[0],
-                    'image':img,
-                    'name':i[2],
-                    'specalist':i[3],
-                    'year':i[4],
-                    'rating':i[5],
-                    'fees':i[6],
-                    'status':i[7]
-                }
-            )
-        
-        return render_template("finddoctor.html",results = doctor)
-    
-    return render_template("finddoctor.html")
-
-
 
 ### show all data  relate doctor ....
 
-@app.route("/finddoctor",methods =["GET"])
+@app.route("/finddoctor",methods =["GET","POST"])
 def show():
     if "username" not in session:
         return redirect(url_for("fhome"))
@@ -559,24 +633,56 @@ def show():
            database ='doctorapplication'
     )
     cursor = con.cursor()
-    cursor.execute("select * from doctorlist;")
-    data = cursor.fetchall()
-    cursor.close()
-    con.close()
-    
-    doctorlist =[]
-    for i in data:
-        img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
-        doctorlist.append({
-            'id':i[0],
-            'image':img,
-            'name':i[2],
-            'specalist':i[3],
-            'year':i[4],
-            'rating':i[5],
-            'fees':i[6],
-            'status':i[7]
-        }) 
+    try:
+        cursor.execute("select * from doctorlist;")
+        data = cursor.fetchall()
+        doctorlist =[]
+        for i in data:
+            img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+            doctorlist.append({
+                'id':i[0],
+                'image':img,
+                'name':i[2],
+                'specalist':i[3],
+                'year':i[4],
+                'rating':i[5],
+                'fees':i[6],
+                'status':i[7]
+            })
+        
+        if request.method =="POST":
+            input_data = request.form.get("input")
+            pattern = "%"+input_data+"%"
+            
+            con = get_connection()
+            cursor = con.cursor()
+            cursor.execute("SELECT * FROM doctorlist WHERE name like %s OR specailist LIKE %s ",(pattern,pattern))
+            data = cursor.fetchall()
+            cursor.close()
+            con.close()
+            
+            doctor=[]
+            for i in data:
+                img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+                doctor.append(
+                    {
+                        'id':i[0],
+                        'image':img,
+                        'name':i[2],
+                        'specalist':i[3],
+                        'year':i[4],
+                        'rating':i[5],
+                        'fees':i[6],
+                        'status':i[7]
+                    }
+                )
+            
+            return render_template('finddoctor.html',results=doctor)
+
+             
+    finally:
+        cursor.close()
+        con.close()
     
     return render_template('finddoctor.html',results=doctorlist)
 
@@ -584,7 +690,7 @@ def show():
 @app.route("/disable/<int:doctor_id>")
 def disable(doctor_id):
     if "username" not in session:
-        return redirect(url_for("gotologin`"))
+        return redirect(url_for("gotologin"))
     con = mysql.connector.connect(
                host ='localhost',
                user='root',

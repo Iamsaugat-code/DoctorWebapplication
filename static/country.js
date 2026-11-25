@@ -52,3 +52,8 @@ fetch("https://raw.githubusercontent.com/abinrimal/nepal-administrative-division
     };
     reader.readAsDataURL(file);
   });
+
+cons
+
+const p = document.getElementById('doctorPreview');
+console.log(p.src, p.naturalWidth, getComputedStyle(p).display, p.getBoundingClientRect());

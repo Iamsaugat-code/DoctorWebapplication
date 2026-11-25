@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" class="overflow-y-scroll">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Doctor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/src/output.css" />
+  </head>
+  <body class="m-0 overflow-x-hidden">
+
+    <form action="{{url_for('adding_doctor')}}" method="post" class="py-17 px-12" enctype="multipart/form-data">
+
+      <section>
+        <div class="px-8 py-2 bg-blue-700 w-full rounded-md text-white">
+        <h2 class="font-bold text-[19px]">Doctor Information</h2>
+        </div>
+      <div class="mt-6 flex items-center gap-8">
+        <div class="w-full">
+        <div class="font-semibold flex items-center gap-3">
+          <i class="fa-solid fa-user-doctor text-[20px] text-blue-500"></i>
+          <h3 class="font-serif pt-2">Doctor Name</h3>
+        </div>
+        <div
+          class="bg-white px-3 py-2.5 border-[2px] border-slate-200 rounded-md mt-2 flex items-center justify-center gap-1"
+        >
+          <input
+            type="text"
+            name="doctor_name"
+            required
+            value="{{request.form.get('named','')}}"
+            class="w-full outline-none"
+            placeholder=" Enter the username"
+            autocomplete="off"
+          />
+          <div>
+            <i class="fa-solid fa-user text-slate-400"></i>
+          </div>
+        </div>
+        </div>
+
+         <div class="w-full">
+        <div class="font-semibold flex items-center gap-3">
+          <i class="fa-solid fa-stethoscope text-[20px] text-blue-500"></i>
+          <h3 class="font-serif pt-2">Doctor Specialist</h3>
+        </div>
+        <div
+          class="bg-white px-3 py-2.5 border-[2px] border-slate-200 rounded-md mt-2 flex items-center justify-center gap-1"
+        >
+          <input
+            type="text"
+            name="doctor_sp"
+            required
+            value="{{request.form.get('doctor_sp','')}}"
+            class="w-full outline-none"
+            placeholder=" Enter the specialist"
+            autocomplete="off"
+          />
+          <div>
+            <i class="fa-solid fa-stethoscope text-slate-400"></i>
+          </div>
+        </div>
+        </div>
+        </div>
+
+        <div class="mt-8 flex items-center gap-8">
+         <div class="w-[20%]">
+        <div class="font-semibold flex items-center gap-3">
+          <i class="fa-solid fa-calendar-days text-[20px] text-blue-500"></i>
+          <h3 class="font-serif pt-2">Experince Years</h3>
+        </div>
+        <div
+          class="bg-white px-3 py-2.5 border-[2px] border-slate-200 rounded-md mt-2 flex items-center justify-center gap-1"
+        >
+          <input
+            type="text"
+            name="years"
+            step="0.1"
+            required
+            value="{{request.form.get('years','')}}"
+            class="w-full outline-none"
+            placeholder=" Enter the years"
+            oninput="this.value= this.value.replace(/[^0-9.]/g,'')"
+            autocomplete="off"
+          />
+          <div>
+            <i class="fa-solid fa-calendar-days text-slate-400"></i>
+          </div>
+        </div>
+        </div>
+
+        
+        <article class="w-[20%]">
+        <div class="font-semibold flex items-center gap-3">
+          <i class="fa-solid fa-star text-[20px] text-blue-500"></i>
+          <h3 class="font-serif pt-2">Rating</h3>
+        </div>
+        <div
+          class="bg-white px-3 py-2.5 border-[2px] border-slate-200 rounded-md mt-2 flex items-center justify-center gap-1"
+        >
+          <input
+            type="number"
+            name="rating"
+            max="5"
+            min="0"
+            step="0.1"
+            oninput="if (this.value >5) this.value=5; if (this.value<0) this.value=0"
+            required
+            value="{{request.form.get('rating','')}}"
+            class="w-full outline-none"
+            placeholder=" Enter the rating"
+            autocomplete="off"
+          />
+          <div>
+            <i class="fa-solid fa-star text-slate-400"></i>
+          </div>
+        </div>
+        </article>
+
+         <article class="w-[20%]">
+        <div class="font-semibold flex items-center gap-3">
+          <i class="fa-solid fa-indian-rupee-sign text-[20px] text-blue-500"></i>
+          <h3 class="font-serif pt-2">fees</h3>
+        </div>
+        <div
+          class="bg-white px-3 py-2.5 border-[2px] border-slate-200 rounded-md mt-2 flex items-center justify-center gap-1"
+        >
+          <input
+            type="text"
+            name="fees"
+            required
+            value="{{request.form.get('fees','')}}"
+            class="w-full outline-none"
+            placeholder=" Enter the fees"
+            autocomplete="off"
+            oninput="this.value = this.value.replace(/[^0-9.]/g,'')"
+          />
+          <div>
+            <i class="fa-solid fa-indian-rupee-sign text-slate-400"></i>
+          </div>
+        </div>
+        </article>
+      </div>
+      </section>
+       <section class="mt-8">
+          <div class="px-8 py-2 bg-blue-700 w-full rounded-md text-white">
+        <h2 class="font-bold text-[19px]">Doctor Image</h2>
+      </div>
+
+      <article class="mt-4 py-4 flex  gap-8">
+        <label for="images" class=" cursor-pointer  px-4 py-2 h-[45px] bg-gray-200 rounded-lg font-semibold hover:bg-gray-300 flex items-center justify-center">
+          Choose image
+        </label>
+        <div>
+
+        <img id="p"  alt="" class=" border-none  h-[200px] w-[200px] object-cover object-top hidden"  onerror="this.style.display ='none' ">
+          <input type="file" name="image" class="hidden border " id="images" accept="image/*" id=""
+          onchange="
+          var p = document.getElementById('p')
+          if(this.files.length>0){
+            p.style.display ='block'
+            p.src = URL.createObjectURL(this.files[0])
+          }">
+        </div>
+      </article>
+        </section>
+
+ <button class="" type="submit"> send</button>
+
+    </form>
+<script src="{{ url_for('static', filename='test.js') }}" defer></script>
+  </body>
+</html>

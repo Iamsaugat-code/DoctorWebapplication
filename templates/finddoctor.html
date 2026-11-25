@@ -59,7 +59,7 @@
             </h2></a
           >
         </div>
-       <div class="w-[18%] mt-1 ml-4 relative z-40 rounded-md bg-white px-2 ">
+       <div class="w-[18%] mt-1 pl-[60px] relative z-40 rounded-md bg-white px-2 ">
           <button id="menubtn" class="hover:text-blue-800 flex items-center justify-center gap-1 pl-3">
             <div class=" relative p-[6px] shadow-xl border rounded-full">
             <div class="h-[36px] w-[36px] p-2 bg-blue-500 rounded-full flex items-center justify-center">
@@ -70,8 +70,12 @@
             </div>
         </div>
             <i id="arrow"  class="fa-solid fa-sort-down"></i></button>
-          <div id="menus" class="hidden bg-white px-2 py-2 rounded-b-md relative right-6" >
-             <a href="{{url_for('history')}}" class="appointment mt-2 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
+          <div id="menus" class="hidden bg-white px-2 py-2 w-[200px] rounded-b-md border-b-slate-300 border-b-[2px] relative right-6" >
+             <a href="{{url_for('profile')}}" class="profile  px-3 py-2  w-full flex items-center gap-3 hover:text-white hover:rounded-md hover:bg-blue-500">
+                     <i class="fa-solid fa-user text-xl"></i>
+                    <h2 class="text-[16px]">My profile</h2>
+                </a>
+            <a href="{{url_for('history')}}" class="appointment mt-1 hover:text-white  px-3 py-2  w-full flex items-center gap-2 hover:rounded-md hover:bg-blue-500">
                      <i class="fa-solid fa-calendar-days text-md"></i>
                     <h2 class=" text-[16px]">Booking History</h2>
                 </a>
@@ -100,7 +104,7 @@
   We'll help you find the right care  </p>
 
    </div>
-   <form action="/dataSearched" method="post">
+   <form action="{{url_for('show')}}" method="post">
     <div class="p-2 flex items-center justify-center">
       <div class="p-3 px-[15px] border-slate-400 border-b-[1px] border-t-[1px] border-l-[1px] rounded-[5px] flex items-center gap-2">
         <i class="fa-solid fa-magnifying-glass"></i>

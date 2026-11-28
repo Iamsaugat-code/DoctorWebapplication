@@ -1,0 +1,410 @@
+
+<!doctype html>
+<html lang="en" class="overflow-y-scroll">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Doctor </title>
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+  <link rel="stylesheet" href="/static/src/output.css">
+</head>
+
+<body class="bg-slate-100 min-h-screen text-slate-700">
+
+  <form action="{{ url_for('edit') }}"
+        method="post"
+        enctype="multipart/form-data"
+        class="max-w-7xl mx-auto px-5 md:px-10 py-10">
+<input type="hidden" name="doctor_id" value="{{ doctor_id }}">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+
+      <div>
+        <h1 class="text-3xl font-bold text-slate-800">
+          Edit Doctor Details
+        </h1>
+        <p class="text-slate-500 mt-2">
+          Enter the doctor's professional and availability information.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 text-blue-700 bg-blue-50 px-4 py-3 rounded-lg">
+        <i class="fa-solid fa-user-doctor text-xl"></i>
+        <span class="font-semibold">Doctor Management</span>
+      </div>
+
+    </div>
+
+
+    <!-- Doctor Information -->
+    <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-7">
+
+      <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-7">
+        <div class="bg-blue-100 text-blue-700 w-11 h-11 rounded-lg flex items-center justify-center">
+          <i class="fa-solid fa-user-doctor text-xl"></i>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Doctor Information</h2>
+          <p class="text-sm text-slate-500">Basic professional details</p>
+        </div>
+
+        <div class=" w-[70%]">
+             {% with messages = get_flashed_messages(with_categories=true) %}
+                {%  for category,message in messages %}
+              <div class="text-[15px] mt-4 flex items-center justify-center gap-3
+              {{ 'text-red-500' if category == 'error' else 'text-green-600' }}">
+              <i class="fa-solid {{ 'fa-circle-exclamation' if category == 'error' else 'fa-circle-check' }}"></i>
+               {{ message }}
+               </div>
+                {% endfor %}
+                {% endwith %}
+
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% for i in results %}
+
+        <!-- Doctor Name -->
+        <div>
+          <label class="block font-semibold mb-2" for="doctor_name">
+            Doctor Name
+          </label>
+
+          <div class="flex items-center border border-slate-300 rounded-lg px-4 py-3 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
+            <input
+              type="text"
+              id="doctor_name"
+              name="doctor_name"
+              required
+              value="{{ request.form.get('doctor_name',i.name) }}"
+              placeholder="Enter doctor name"
+              autocomplete="off"
+              class="w-full outline-none">
+            <i class="fa-solid fa-user text-slate-400"></i>
+          </div>
+        </div>
+
+
+        <!-- Specialist -->
+        <div>
+          <label class="block font-semibold mb-2" for="doctor_sp">
+            Doctor Specialist
+          </label>
+
+          <div class="flex items-center border border-slate-300 rounded-lg px-4 py-3 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
+            <input
+              type="text"
+              id="doctor_sp"
+              name="doctor_sp"
+              required
+              value="{{ request.form.get('doctor_sp',i.specalist) }}"
+              placeholder="Enter specialization"
+              autocomplete="off"
+              class="w-full outline-none">
+            <i class="fa-solid fa-stethoscope text-slate-400"></i>
+          </div>
+        </div>
+
+
+        <!-- Experience -->
+        <div>
+          <label class="block font-semibold mb-2" for="years">
+            Experience Years
+          </label>
+
+          <div class="flex items-center border border-slate-300 rounded-lg px-4 py-3 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
+            <input
+              type="text"
+              id="years"
+              name="years"
+              min="0"
+              step="0.1"
+              required
+              value="{{ request.form.get('years',i.year) }}"
+              placeholder="e.g. 5"
+              oninput="this.value = this.value.replace(/[^0-9.]/g,'')"
+              autocomplete="off"
+              class="w-full outline-none">
+          
+            <i class="fa-solid fa-calendar-days text-slate-400"></i>
+          </div>
+        </div>
+
+
+        <!-- Rating -->
+        <div>
+          <label class="block font-semibold mb-2" for="rating">
+            Doctor Rating
+          </label>
+
+          <div class="flex items-center border border-slate-300 rounded-lg px-4 py-3 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
+            <input
+              type="number"
+              id="rating"
+              name="rating"
+              min="0"
+              max="5"
+              step="0.1"
+              maxlength=""
+              required
+              value="{{ request.form.get('rating',i.rating) }}"
+              placeholder="e.g. 4.5"
+              autocomplete="off"
+              oninput="if (this.value >5) this.value=5; if (this.value<0) this.value=0 "
+              class="w-full outline-none">
+            <i class="fa-solid fa-star text-amber-400"></i>
+          </div>
+        </div>
+
+
+        <!-- Fees -->
+        <div>
+          <label class="block font-semibold mb-2" for="fees">
+            Consultation Fees (NPR)
+          </label>
+
+          <div class="flex items-center border border-slate-300 rounded-lg px-4 py-3 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
+            <input
+              type="text"
+              id="fees"
+              name="fees"
+              min="0"
+              step="0.01"
+              autocomplete="off"
+              required
+              value="{{ request.form.get('fees',i.fees) }}"
+              oninput="this.value = this.value.replace(/[^0-9.]/g,'')"
+              placeholder="Enter consultation fees"
+              class="w-full outline-none">
+            <i class="fa-solid fa-money-bill-wave text-slate-400"></i>
+          </div>
+        </div>
+  {% endfor %}
+
+      </div>
+    </section>
+
+
+    <!-- Doctor Image -->
+    <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-7">
+
+      <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
+        <div class="bg-blue-100 text-blue-700 w-11 h-11 rounded-lg flex items-center justify-center">
+          <i class="fa-solid fa-image text-xl"></i>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Doctor Image</h2>
+          <p class="text-sm text-slate-500">Upload a professional doctor photograph</p>
+        </div>
+      </div>
+
+
+      <div class="flex flex-col sm:flex-row items-start gap-6">
+{% for i in results %}
+        <div>
+          <label for="images"
+            class="cursor-pointer flex items-center gap-3 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 px-5 py-3 rounded-lg font-semibold transition">
+            <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+            Choose Image
+          </label>
+
+          <p class="text-xs text-slate-400 mt-2">
+            JPG, PNG or WEBP format
+          </p>
+
+          <input
+            type="file"
+            name="image"
+            id="images"
+            accept="image/*"
+            class="hidden"
+            onchange="
+              const file = this.files[0];
+              const preview = document.getElementById('preview');
+
+              if(file){
+                preview.src = window.URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+                document.querySelector('#placeholder').classList.add('hidden')
+              } 
+            ">
+        </div>
+
+
+        <div class="w-40 h-40 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center overflow-hidden bg-slate-50">
+
+          <img
+            id="preview"
+            src="data:{{i.imagetype}};base64,{{i.image}}"
+            alt="Doctor preview"
+            class=" w-40 h-40 object-cover object-top ">
+
+        </div>
+  {% endfor %}
+      </div>
+    </section>
+
+
+
+    <!-- Doctor Availability -->
+    <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-7">
+
+      <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-7">
+
+        <div class="bg-blue-100 text-blue-700 w-11 h-11 rounded-lg flex items-center justify-center">
+          <i class="fa-solid fa-calendar-check text-xl"></i>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">
+            Doctor Availability
+          </h2>
+          <p class="text-sm text-slate-500">
+            Set the doctor's available dates and working hours
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {% for i in datas %}
+        <!-- Month -->
+        <div>
+          <label for="month" class="block font-semibold mb-2">
+           Last Select Month ( {{ i[3] }} )
+          </label>
+
+          <input
+            type="month"
+            id="month"
+            class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+
+            <input type="hidden" name="month" id="months_value" value="{{ request.form.get('month',i[3])}}"
+>
+        </div>
+
+
+        <!-- Day One -->
+        <div>
+          <label for="month_day1" id="select_day1" class="block font-semibold mb-2">
+            Last Available Date ( {{i[4]}} ) 
+          </label>
+
+          <input type="hidden" name="day_one" id="day_one"
+           value="{{ request.form.get('day_one',i[4]) }}"
+          >
+
+          <input
+            type="date"
+            name="month_day1"
+            id="month_day1"
+            class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+        </div>
+
+
+        <!-- Day Two -->
+        <div>
+          <label for="month_day2" id="select_day2" class="block font-semibold mb-2">
+            last Available Date ( {{i[5]}} )
+          </label>
+
+          <input type="hidden" name="day_two" id="day_two"
+           value="{{ request.form.get('day_two',i[5]) }}"
+          >
+
+          <input
+            type="date"
+            name="month_day2"
+            id="month_day2"
+            class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+        </div>
+
+
+        <!-- Day Three -->
+        <div>
+          <label for="month_day3" id="select_day3" class="block font-semibold mb-2">
+            Last Available Date ( {{i[6]}} )
+          </label>
+
+          <input type="hidden" name="day_three" id="day_three"
+           value="{{ request.form.get('day_three',i[6]) }}"
+          >
+
+          <input
+            type="date"
+            name="month_day3"
+            id="month_day3"
+            class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+        </div>
+
+
+        <!-- From Time -->
+        <div>
+          <label for="time_from"  class="block font-semibold mb-2">
+            Starting Time
+          </label>
+
+          <input
+            type="time"
+            name="time_from"
+            id="time_from"
+           value="{{ request.form.get('time_from',i[7]) }}"
+            class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+        </div>
+
+
+        <!-- To Time -->
+        <div>
+          <label for="time_to" class="block font-semibold mb-2">
+            Ending Time
+          </label>
+
+          <input
+            type="time"
+            name="time_to"
+            id="time_to"
+           value="{{ request.form.get('to_from',i[8]) }}"
+            class="w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+        </div>
+
+        {% endfor %}
+
+      </div>
+    </section>
+
+    <!-- Bottom Buttons -->
+    <div class="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 bg-white border border-slate-200 shadow-sm rounded-xl p-5">
+
+      <a href="{{url_for('add_doctor')}}"
+        class="w-full sm:w-auto flex items-center justify-center gap-3 px-7 py-3 rounded-lg border border-slate-300 text-slate-600 font-semibold hover:bg-slate-100 transition">
+        <i class="fa-solid fa-arrow-left"></i>
+        Go Back
+    </a>
+
+
+      <button
+        type="submit"
+        class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 rounded-lg bg-blue-700 text-white font-semibold hover:bg-blue-800 shadow-md transition">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Save Doctor
+      </button>
+
+    </div>
+
+  </form>
+
+
+  <script src="/static/adddoctor.js">
+    
+  </script>
+
+</body>
+</html>

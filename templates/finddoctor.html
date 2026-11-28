@@ -127,10 +127,11 @@ grid grid-cols-2  md:grid-cols-4 gap-4">
 
 <!--  -->
 {% for i in results %}
+{% if i.status != 'pending' %}
 <div class="p-4 border-[1.5px] pb-6 shadow-md rounded-[10px] border-slate-300">
   <div class="relative">
     <div class=" absolute top-[3px] left-[2px] py-1 px-3 {{'bg-green-500 shadow-green-700' if i.status=='available' else 'bg-slate-500 shadow-slate-700'}} font-bold shadow-md rounded-full flex items-center justify-center gap-2"><i class="fa-solid fa-circle text-white text-[10px]"></i><span class="text-white text-[10px] capitalize ">{{i.status}}</span></div>
-  <img class="block shrink-0 h-[215px] w-full rounded-md object-cover object-top "  src="data:image/png;base64,{{i.image}}" 
+  <img class="block shrink-0 h-[215px] w-full rounded-md object-cover object-top "  src="data:{{i.imagetype}};base64,{{i.image}}" 
   alt="">
   </div>
   <h2 class="lg:text-[17px] mt-3 p-[3px] leading-[20px] sm:font-bold">DR. {{i.name}}</h2>
@@ -168,6 +169,8 @@ grid grid-cols-2  md:grid-cols-4 gap-4">
       <p class="text-lg font-semibold">No doctor found</p>
       <p>Try a different name or specialist.</p>
     </div>
+
+{% endif %}    
 
 {% endfor %}
 

@@ -7,6 +7,7 @@ import mysql.connector
 import base64
 import re
 import math
+from decimal import Decimal
 
 
 app = Flask(__name__)
@@ -55,8 +56,6 @@ def f_finddoctor():
     cursor = con.cursor()
     cursor.execute("select * from doctorlist;")
     data = cursor.fetchall()
-    cursor.close()
-    con.close()
     
     doctorlist =[]
     for i in data:
@@ -64,14 +63,53 @@ def f_finddoctor():
         doctorlist.append({
             'id':i[0],
             'image':img,
-            'name':i[2],
-            'specalist':i[3],
-            'year':i[4],
-            'rating':i[5],
-            'fees':i[6],
-            'status':i[7]
-        }) 
+            'imagetype':i[2],
+            'name':i[3],
+            'specalist':i[4],
+            'year':i[5],
+            'rating':i[6],
+            'fees':i[7],
+            'status':i[8]
+        })
+        
+    try:
+        if request.method =="POST":
+            input_data = request.form.get("input")
+            pattern = "%"+input_data+"%"
+            
+            con = get_connection()
+            cursor = con.cursor()
+            cursor.execute("SELECT * FROM doctorlist WHERE name like %s OR specailist LIKE %s ",(pattern,pattern))
+            data = cursor.fetchall()
+            cursor.close()
+            con.close()
+            
+            doctor=[]
+            for i in data:
+                img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+                doctor.append(
+                    {
+                        'id':i[0],
+                        'image':img,
+                        'imagetype':i[2],
+                        'name':i[3],
+                        'specalist':i[4],
+                        'year':i[5],
+                        'rating':i[6],
+                        'fees':i[7],
+                        'status':i[8]
+                    }
+                )
+            
+            return render_template('ffindoctor.html',results=doctor)
     
+    except mysql.connector.Error as e:
+        flash("data base connection error ","error")
+        return redirect(url_for('f_finddoctor'))
+    finally:
+        cursor.close()
+        con.close()
+         
     return render_template('ffindoctor.html',results=doctorlist)
 
 @app.route("/fmyappoint",methods =["GET","POST"])
@@ -92,6 +130,7 @@ def admin_home():
     if 'admin' not in session:
         return redirect(url_for('login'))
     return render_template("ahome.html")
+
 
 @app.route("/admin/adddoctor",methods =["GET","POST"])
 def add_doctor():
@@ -114,12 +153,13 @@ def add_doctor():
             doctorlist.append({
                 'id':i[0],
                 'image':img,
-                'name':i[2],
-                'specalist':i[3],
-                'year':i[4],
-                'rating':i[5],
-                'fees':i[6],
-                'status':i[7]
+                'imagetype':i[2] ,
+                'name':i[3],
+                'specalist':i[4],
+                'year':i[5],
+                'rating':i[6],
+                'fees':i[7],
+                'status':i[8]
             }) 
             
         if request.method == "POST":
@@ -138,12 +178,13 @@ def add_doctor():
                     {
                         'id':i[0],
                         'image':img,
-                        'name':i[2],
-                        'specalist':i[3],
-                        'year':i[4],
-                        'rating':i[5],
-                        'fees':i[6],
-                        'status':i[7]
+                        'imagetype':i[2],
+                        'name':i[3],
+                        'specalist':i[4],
+                        'year':i[5],
+                        'rating':i[6],
+                        'fees':i[7],
+                        'status':i[8]
                     }
                 )
             return render_template("afinddoctor.html",results = doctor)
@@ -183,17 +224,197 @@ def status():
 def adding_doctor():
     if 'admin' not in session:
         return redirect(url_for('login'))
+    con = mysql.connector.connect(
+                       host ='localhost',
+                       user='root',
+                       password ='password',
+                       database ='doctorapplication'
+                )
+    cursor = con.cursor()
+    try:
+        if request.method =="POST":
+            
+            doctor_name = request.form.get("doctor_name","").strip()
+            doctor_sp = request.form.get("doctor_sp","").strip()
+            years = Decimal(request.form.get("years","").strip())
+            rating = request.form.get("rating","")
+            fees = Decimal(request.form.get("fees","").strip())
+            f = request.files['image']
+            image_data = f.read()
+            image_type = f.mimetype
+            
+            months =request.form.get("month","")
+            day_one =request.form.get("day_one","").strip()
+            day_two =request.form.get("day_two","").strip()
+            day_three =request.form.get("day_three","").strip()
+            from_time =request.form.get("time_from","")
+            to_time =request.form.get("time_to","")
+            
+            if not all([doctor_name,doctor_sp,years,rating,fees,f,months,day_one,
+                        from_time,to_time]):
+                flash("Please fill the all field ! ","error")
+                return render_template("adddoctor.html")
+            
+            cursor.execute("select count(*) from doctorlist where name =%s and specailist =%s",   (doctor_name,doctor_sp))
+            exists = cursor.fetchone()[0]
+            if exists:
+                flash(f"{doctor_name} is already available", "error")
+                return redirect(url_for('adding_doctor'))
+            
+            cursor.execute("INSERT INTO doctorlist (image,imagetype,name,specailist,year,rating,fees) VALUES (%s,%s,%s,%s,%s,%s,%s)",(image_data,image_type,doctor_name,doctor_sp,years,rating,fees))
+            doctor_id = cursor.lastrowid 
+            
+            cursor.execute("insert into doctoravailability (doctor_id,doctor_name,months,day_1,day_2,    day_3,from_time,to_time) values (%s,%s,%s,%s,%s,%s,%s,%s)",(doctor_id,doctor_name,months,    day_one,day_two,day_three,from_time,to_time))
+            
+            con.commit()  
+                
+            flash(f"{doctor_name} is added successfully !","success")
+            return redirect(url_for('adding_doctor'))
     
-    if request.method =="POST":
-        f = request.files['image']
-        image_data = f.read()
-        image_type = f.mimetype
-        
-        print(image_type)
+    except mysql.connector.IntegrityError as e:
+        flash("database are not matching ","error")
         return redirect(url_for('adding_doctor'))
+    
+    except mysql.connector.Error as E:
+        flash("database connection error ","error")
+        return redirect(url_for('adding_doctor'))
+    
     return render_template("adddoctor.html")
 
+#edit the doctor 
 
+
+@app.route("/admin/edit",methods=["GET","POST"])
+def edit():
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    
+    doctor_id = request.args.get("doctor_id") or request.form.get('doctor_id')
+    print(doctor_id)
+    
+    con = mysql.connector.connect(
+                                    host ='localhost',
+                                    user='root',
+                                    password ='password',
+                                    database ='doctorapplication'
+                                )
+    cursor = con.cursor()
+    
+    try:    
+        if request.method =="POST":
+            try:        
+                doctor_name = request.form.get("doctor_name","").strip()
+                doctor_sp = request.form.get("doctor_sp","").strip()
+                years = Decimal(request.form.get("years","").strip())
+                rating = request.form.get("rating","")
+                fees = Decimal(request.form.get("fees","").strip())
+                f = request.files.get('image')
+                image_data = f.read()
+                image_type = f.mimetype
+                
+                months =request.form.get("month","")
+                day_one =request.form.get("day_one","").strip()
+                day_two =request.form.get("day_two","").strip()
+                day_three =request.form.get("day_three","").strip()
+                from_time =request.form.get("time_from","")
+                to_time =request.form.get("time_to","")
+                
+                if image_type == 'application/octet-stream':
+                    cursor.execute("update doctorlist set name=%s,specailist=%s, year =%s,rating=%s,fees=%s where doctor_id =%s",(doctor_name,doctor_sp,years,rating,fees,doctor_id))
+                    
+                    cursor.execute("update doctoravailability set months=%s,day_1=%s,day_2=%s,    day_3=%s,from_time=%s,to_time=%s where doctor_id =%s",(months,day_one,day_two, day_three,from_time,to_time,doctor_id))
+                    con.commit()
+                    flash("doctor Data uploaded successfully","Error")
+                    return redirect(url_for('edit',doctor_id=doctor_id))
+                    
+                
+                cursor.execute("update doctorlist set image=%s,imagetype=%s,name=%s,specailist=%s,year =%s,rating=%s,fees=%s where doctor_id =%s",(image_data,image_type,doctor_name,doctor_sp,years,rating,fees,doctor_id))
+                
+                cursor.execute("update doctoravailability set months=%s,day_1=%s,day_2=%s,day_3=%s,from_time=%s,to_time=%s where doctor_id =%s",(months,day_one,day_two,day_three,from_time,to_time,doctor_id))
+                con.commit()
+                
+            except mysql.connector.IntegrityError as e:
+                flash("database table error ","error")
+                return redirect(url_for('edit',doctor_id=doctor_id))
+                
+                
+            flash("doctor Data uploaded successfully","Error")
+            return redirect(url_for('edit',doctor_id=doctor_id))
+        
+        cursor.execute("select * from doctorlist where doctor_id = %s",(doctor_id,))
+        doctor_data = cursor.fetchall()
+        doctor = []
+        for i in doctor_data:
+            img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''    
+            doctor.append({
+                'image':img,
+                'imagetype':i[2],
+                'name':i[3],
+                'specalist':i[4],
+                'year':i[5],
+                'rating':i[6],
+                'fees':i[7],
+            })
+        cursor.execute("select*from doctoravailability where doctor_id = %s",(doctor_id,))
+        datas = cursor.fetchall()
+        
+        return render_template("aedit.html",results= doctor,datas= datas,doctor_id=doctor_id)
+ 
+   
+    except mysql.connector.Error as e:
+        flash(f"Database error: {e}", "error")
+        print("eeror",e)
+        return redirect(url_for('edit',doctor_id=doctor_id))
+    
+    finally:
+        cursor.close()
+        con.close()
+        
+@app.route("/admin/delete",methods=["GET","POST"])
+def del_doctor():
+    con = mysql.connector.connect(
+                                        host ='localhost',
+                                        user='root',
+                                        password ='password',
+                                        database ='doctorapplication'
+                                    )
+    cursor = con.cursor()
+    try:
+        cursor.execute("select * from doctorlist;")
+        data = cursor.fetchall()
+        
+        doctorlist =[]
+        for i in data:
+            img = base64.b64encode(i[1]).decode('utf-8') if i[1] else ''
+            doctorlist.append({
+                'id':i[0],
+                'image':img,
+                'imagetype':i[2] ,
+                'name':i[3],
+                'specalist':i[4],
+                'year':i[5],
+                'rating':i[6],
+                'fees':i[7],
+                'status':i[8]
+            })
+        if request.method =='POST':
+            doctor_id = request.form.get("doctor_id","")
+            cursor.execute("delete from doctoravailability where doctor_id = %s",(doctor_id,))
+            cursor.execute("delete from doctorlist where doctor_id = %s",(doctor_id,))
+            con.commit()
+            
+            return redirect(url_for('add_doctor'))
+    except mysql.connector.Error as e:
+        print(f"database connection error {e}","error")
+        return redirect(url_for('add_doctor'))
+        
+    finally:
+        cursor.close()
+        con.close()
+    return render_template("afinddoctor.html",results = doctorlist)
+
+        
+    
 # login page
 @app.route("/login",methods=["GET"])
 def login():
@@ -642,12 +863,13 @@ def show():
             doctorlist.append({
                 'id':i[0],
                 'image':img,
-                'name':i[2],
-                'specalist':i[3],
-                'year':i[4],
-                'rating':i[5],
-                'fees':i[6],
-                'status':i[7]
+                'imagetype':i[2],
+                'name':i[3],
+                'specalist':i[4],
+                'year':i[5],
+                'rating':i[6],
+                'fees':i[7],
+                'status':i[8]
             })
         
         if request.method =="POST":
@@ -668,12 +890,13 @@ def show():
                     {
                         'id':i[0],
                         'image':img,
-                        'name':i[2],
-                        'specalist':i[3],
-                        'year':i[4],
-                        'rating':i[5],
-                        'fees':i[6],
-                        'status':i[7]
+                        'imagetype':i[2],
+                        'name':i[3],
+                        'specalist':i[4],
+                        'year':i[5],
+                        'rating':i[6],
+                        'fees':i[7],
+                        'status':i[8]
                     }
                 )
             
